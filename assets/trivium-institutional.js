@@ -179,6 +179,53 @@
 
   document.querySelector('#footer-year').textContent = new Date().getFullYear();
 
+  const CHAT_EMAIL = 'triviumgestao@outlook.com';
+  const chatWidget = document.querySelector('[data-chat-widget]');
+  const chatLauncher = chatWidget?.querySelector('.chat-launcher');
+  const chatPanel = chatWidget?.querySelector('.chat-panel');
+  const chatClose = chatWidget?.querySelector('.chat-close');
+  const chatForm = chatWidget?.querySelector('[data-chat-form]');
+  const chatMessage = chatWidget?.querySelector('#chat-message');
+  const chatStatus = chatWidget?.querySelector('.chat-status');
+
+  const setChatOpen = open => {
+    if (!chatWidget || !chatLauncher || !chatPanel) return;
+    chatWidget.classList.toggle('is-open', open);
+    chatLauncher.setAttribute('aria-expanded', String(open));
+    chatLauncher.setAttribute('aria-label', open ? 'Atendimento aberto' : 'Abrir atendimento');
+    chatPanel.setAttribute('aria-hidden', String(!open));
+    if (open) window.setTimeout(() => chatMessage?.focus(), 180);
+  };
+
+  chatLauncher?.addEventListener('click', () => setChatOpen(!chatWidget.classList.contains('is-open')));
+  chatClose?.addEventListener('click', () => {
+    setChatOpen(false);
+    chatLauncher?.focus();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && chatWidget?.classList.contains('is-open')) {
+      setChatOpen(false);
+      chatLauncher?.focus();
+    }
+  });
+  chatMessage?.addEventListener('input', () => {
+    if (chatStatus) chatStatus.textContent = '';
+    chatMessage.style.height = '42px';
+    chatMessage.style.height = `${Math.min(chatMessage.scrollHeight, 96)}px`;
+  });
+  chatForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    const message = chatMessage?.value.trim();
+    if (!message) {
+      if (chatStatus) chatStatus.textContent = 'Escreva uma mensagem para continuar.';
+      chatMessage?.focus();
+      return;
+    }
+    const subject = 'Mensagem pelo site da Trivium';
+    const body = `Olá, equipe Trivium!\n\n${message}\n\nMensagem preparada pelo atendimento do site.`;
+    window.location.href = `mailto:${CHAT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+
   const form = document.querySelector('#contact-form');
   if (!form) return;
   const status = form.querySelector('.form-status');
