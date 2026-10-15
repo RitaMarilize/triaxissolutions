@@ -221,8 +221,8 @@
       chatMessage?.focus();
       return;
     }
-    const subject = 'Mensagem pelo site da Trivium';
-    const body = `Olá, equipe Trivium!\n\n${message}\n\nMensagem preparada pelo atendimento do site.`;
+    const subject = 'Mensagem pelo site da Triaxis Solutions';
+    const body = `Olá, equipe Triaxis Solutions!\n\n${message}\n\nMensagem preparada pelo atendimento do site.`;
     window.location.href = `mailto:${CHAT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 
@@ -279,7 +279,7 @@
       if (!response.ok) throw new Error('Falha no envio');
       form.reset();
       status.classList.add('success');
-      status.textContent = 'Mensagem enviada. Em breve a Trivium entra em contato.';
+      status.textContent = 'Mensagem enviada. Em breve a Triaxis Solutions entra em contato.';
     } catch {
       status.classList.add('error');
       status.textContent = 'Não foi possível enviar agora. Tente novamente em alguns instantes.';

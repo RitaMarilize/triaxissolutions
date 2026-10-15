@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://trivium-tecnologia.ritamariliza.chatgpt.site/sitemap.xml
+Sitemap: https://triaxis-solutions.ritamariliza.chatgpt.site/sitemap.xml
