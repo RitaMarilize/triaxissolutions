@@ -105,8 +105,8 @@ main { overflow: clip; }
 
 .section { padding: 132px 0; }
 .section-heading { max-width: 900px; }
-.section-heading h2, .project-copy h2, .difference-intro h2, .team-heading h2, .contact-copy h2 { margin: 0; font-size: clamp(2.7rem, 5.2vw, 5.1rem); line-height: 1.01; letter-spacing: -.058em; font-weight: 630; }
-.section-heading > p:last-child, .difference-intro > p:last-child { max-width: 600px; margin: 26px 0 0; color: var(--muted); font-size: 1.04rem; line-height: 1.65; }
+.section-heading h2, .project-copy h2, .team-heading h2, .contact-copy h2 { margin: 0; font-size: clamp(2.7rem, 5.2vw, 5.1rem); line-height: 1.01; letter-spacing: -.058em; font-weight: 630; }
+.section-heading > p:last-child { max-width: 600px; margin: 26px 0 0; color: var(--muted); font-size: 1.04rem; line-height: 1.65; }
 
 .solutions { background: var(--surface); }
 .solution-coverflow { position: relative; width: 100%; margin-top: 64px; padding: 26px 0 40px; overflow: hidden; outline: none; cursor: grab; touch-action: pan-y; perspective: 1120px; }
@@ -151,16 +151,6 @@ main { overflow: clip; }
 .project-phone-speaker { position: absolute; top: 5px; left: 50%; z-index: 2; width: 26%; height: 3px; border-radius: 99px; background: #344150; transform: translateX(-50%); }
 .project-phone-screen { display: block; overflow: hidden; border-radius: 14px; background: #fff; }
 .project-phone-screen img { width: 100%; aspect-ratio: 9/17; display: block; object-fit: cover; object-position: 77% center; }
-
-.difference { background: #fff; }
-.difference-intro { max-width: 980px; }
-.difference-intro h2 span { color: var(--blue); }
-.difference-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 72px; border-top: 1px solid var(--line); }
-.difference-grid article { min-height: 270px; padding: 32px 34px 26px 0; border-bottom: 1px solid var(--line); }
-.difference-grid article + article { padding-left: 34px; border-left: 1px solid var(--line); }
-.concept-mark { width: 34px; height: 2px; display: block; background: var(--blue); }
-.difference-grid h3 { margin: 70px 0 15px; font-size: clamp(1.35rem, 2.2vw, 1.9rem); line-height: 1.15; letter-spacing: -.035em; }
-.difference-grid p { max-width: 320px; margin: 0; color: var(--muted); line-height: 1.62; }
 
 .team { background: var(--surface); }
 .team-heading { display: grid; grid-template-columns: 1.25fr .75fr; gap: 70px; align-items: end; }
@@ -224,11 +214,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-copy-column { max-width: 650px; }
   .hero h1 { font-size: clamp(3.15rem, 8.5vw, 5rem); }
   .hero-dashboard-wrap { width: min(100%, 720px); margin-inline: auto; }
-  .difference-grid { grid-template-columns: 1fr; }
   .solution-coverflow { margin-inline: calc((100vw - var(--shell)) / -2); width: 100vw; }
-  .difference-grid article { min-height: 0; padding: 28px 0 34px; }
-  .difference-grid article + article { padding-left: 0; border-left: 0; }
-  .difference-grid h3 { margin-top: 42px; }
   .team-heading, .contact-panel { grid-template-columns: 1fr; }
   .project-showcase { grid-template-columns: minmax(260px,.8fr) minmax(0,1.2fr); }
   .project-copy { padding: 42px 34px; }
@@ -267,10 +253,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .distribution-card { display: none; }
   .dashboard-note { right: 3px; bottom: 4px; }
   .section { padding: 92px 0; }
-  .section-heading h2, .project-heading h2, .difference-intro h2, .team-heading h2, .contact-copy h2 { font-size: clamp(2.3rem, 11.5vw, 3.35rem); }
-  .section-heading h2 br, .difference-intro h2 br, .team-heading h2 br { display: none; }
+  .section-heading h2, .project-heading h2, .team-heading h2, .contact-copy h2 { font-size: clamp(2.3rem, 11.5vw, 3.35rem); }
+  .section-heading h2 br, .team-heading h2 br { display: none; }
   .section-label { margin-bottom: 18px; }
-  .difference-grid, .team-grid { margin-top: 48px; }
+  .team-grid { margin-top: 48px; }
   .solution-coverflow { margin-top: 48px; padding: 18px 0 30px; perspective: 850px; }
   .solution-grid { height: 350px; }
   .solution-card { width: clamp(270px, 82vw, 320px); height: 326px; padding: 26px; border-radius: 14px; }
