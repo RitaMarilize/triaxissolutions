@@ -168,6 +168,7 @@ main { overflow: clip; }
 
 .team { background: var(--surface); }
 .team-heading { display: grid; grid-template-columns: 1.28fr .72fr; gap: clamp(46px,6vw,86px); align-items: end; }
+.team-heading h2 { font-size: clamp(2.7rem,4vw,3.9rem); white-space: nowrap; }
 .team-heading > p { max-width: 440px; margin: 0 0 8px; padding: 4px 0 4px 34px; border-left: 1px solid #cfd9e4; color: #66778a; font-size: 1.02rem; line-height: 1.62; }
 .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 58px; }
 .person { overflow: hidden; display: flex; min-width: 0; flex-direction: column; border: 1px solid #dce4ec; border-radius: 16px; background: #fff; box-shadow: 0 12px 32px rgba(19,43,72,.055); transition: transform .32s var(--ease), box-shadow .32s var(--ease), border-color .32s var(--ease); }
@@ -299,6 +300,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .project-laptop { left: 4%; top: 15%; width: 82%; }
   .project-phone { right: 5%; bottom: 8%; width: 25%; }
   .team-grid { grid-template-columns: 1fr; }
+  .team-heading h2 { font-size: clamp(1.95rem,8.2vw,2.25rem); white-space: nowrap; }
   .team-heading > p { padding: 0; border-left: 0; }
   .team-grid .person:last-child { grid-column: auto; width: auto; justify-self: stretch; }
   .person-photo { aspect-ratio: 1.25/1; }
