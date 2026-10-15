@@ -194,6 +194,12 @@ main { overflow: clip; }
 .contact-copy > p { max-width: 450px; margin: 22px 0 30px; color: rgba(235,243,251,.78); font-size: 1rem; line-height: 1.58; }
 .contact-direct { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 0 22px; border: 1px solid #59b9ff; border-radius: 999px; color: #fff; background: transparent; font-size: .8rem; font-weight: 800; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; }
 .contact-direct:hover { color: #082644; border-color: #fff; background: #fff; transform: translateY(-2px); }
+.contact-links { display: flex; align-items: center; gap: 18px; margin-top: 24px; }
+.contact-links-label { color: rgba(220,233,246,.72); font-size: .58rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.contact-socials { display: flex; align-items: center; gap: 9px; }
+.contact-socials a { width: 38px; height: 38px; display: grid; place-items: center; color: #fff; border: 1px solid rgba(143,200,244,.48); border-radius: 10px; background: rgba(255,255,255,.035); transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease; }
+.contact-socials a:hover { color: #0a3158; border-color: #fff; background: #fff; transform: translateY(-2px); }
+.contact-socials svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 16px; align-self: center; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field-wide, .form-submit, .form-status { grid-column: 1/-1; }
@@ -311,6 +317,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .contact-copy h2 { font-size: clamp(2.35rem,11.8vw,3.35rem); }
   .contact-copy > p { margin: 20px 0 26px; font-size: .95rem; }
   .contact-direct { width: 100%; }
+  .contact-links { justify-content: space-between; }
   .contact-form { grid-template-columns: 1fr; }
   .field-wide, .form-submit, .form-status { grid-column: auto; }
   .footer-main { flex-direction: column; gap: 34px; }
