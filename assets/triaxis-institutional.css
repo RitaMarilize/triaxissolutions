@@ -96,7 +96,7 @@ main { position: relative; z-index: 1; overflow: clip; }
 .dashboard-heading h2 { margin: 4px 0 0; color: var(--navy); font-size: 1.35rem; letter-spacing: -.03em; }
 .dashboard-filter { padding: 8px 10px; border: 1px solid #e0e5ea; border-radius: 7px; background: #fafbfc; }
 .dashboard-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-top: 21px; }
-.dashboard-metrics article { min-height: 94px; padding: 13px; border: 1px solid #e5e9ee; border-radius: 9px; background: #fff; box-shadow: 0 6px 16px rgba(16,30,51,.045); }
+.dashboard-metrics article { position: relative; min-height: 94px; overflow: hidden; padding: 13px; border: 1px solid #dce4ec; border-radius: 12px; background: linear-gradient(155deg,#fff 0%,#f5f9fd 100%); box-shadow: 0 8px 20px rgba(16,30,51,.06); }
 .dashboard-metrics strong { display: block; margin-top: 10px; color: var(--navy); font-size: .75rem; }
 .metric-line { width: 36px; height: 2px; display: block; margin-top: 15px; background: var(--blue); transform: rotate(-7deg); }
 .metric-bars { height: 21px; display: flex; align-items: flex-end; gap: 3px; margin-top: 9px; }
@@ -332,12 +332,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .dashboard-shell { min-height: 0; display: block; border-color: #dce5ef; border-radius: 16px; box-shadow: 0 18px 38px rgba(16,30,51,.1); transform: none; }
   .dashboard-side, .dashboard-heading, .dashboard-charts, .dashboard-note { display: none; }
   .dashboard-main { padding: 16px; }
-  .dashboard-metrics { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-top: 0; }
-  .dashboard-metrics article { min-height: 108px; display: flex; flex-direction: column; padding: 14px 10px 12px; border-color: #e1e8ef; background: linear-gradient(155deg,#fff 0%,#f5f9fd 100%); box-shadow: none; }
-  .dashboard-heading span, .dashboard-metrics article > span { font-size: .55rem; }
-  .dashboard-metrics strong { margin-top: 8px; font-size: .69rem; line-height: 1.25; overflow-wrap: anywhere; }
-  .metric-line { width: 30px; margin-top: auto; }
-  .metric-bars { margin-top: auto; }
+  .dashboard-metrics { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 0; }
+  .dashboard-metrics article { min-height: 128px; display: flex; flex-direction: column; padding: 16px 9px 13px; border-color: #d6e1ec; border-radius: 15px; background: linear-gradient(150deg,#fff 0%,#f2f7fc 100%); box-shadow: 0 10px 24px rgba(22,57,94,.08); }
+  .dashboard-metrics article::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg,#365c87,#65a9ed); }
+  .dashboard-metrics article::after { content: ""; position: absolute; right: -25px; bottom: -31px; width: 82px; height: 82px; border-radius: 50%; background: rgba(75,137,201,.07); }
+  .dashboard-metrics article:nth-child(2)::before { background: linear-gradient(90deg,#1d75c8,#36b5ef); }
+  .dashboard-metrics article:nth-child(3)::before { background: linear-gradient(90deg,#26476e,#729ac3); }
+  .dashboard-heading span, .dashboard-metrics article > span { position: relative; z-index: 1; color: #718096; font-size: .5rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .dashboard-metrics strong { position: relative; z-index: 1; margin-top: 9px; color: #13253d; font-size: .64rem; line-height: 1.22; letter-spacing: -.02em; white-space: nowrap; }
+  .metric-line { position: relative; z-index: 1; width: 42px; height: 28px; margin-top: auto; background: none; transform: none; }
+  .metric-line::before { content: ""; position: absolute; left: 1px; bottom: 7px; width: 36px; height: 3px; border-radius: 99px; background: linear-gradient(90deg,#365c87,#70a7dc); transform: rotate(-7deg); }
+  .metric-line::after { content: ""; position: absolute; right: 1px; bottom: 9px; width: 6px; height: 6px; border: 2px solid #fff; border-radius: 50%; background: #4f8fcf; box-shadow: 0 0 0 1px rgba(54,92,135,.18); }
+  .metric-bars { position: relative; z-index: 1; height: 29px; gap: 4px; margin-top: auto; }
+  .metric-bars b { width: 5px; border-radius: 3px 3px 1px 1px; background: linear-gradient(#63a9e7,#365c87); }
   .section { padding: 92px 0; }
   .section-heading h2, .project-heading h2, .team-heading h2, .contact-copy h2 { font-size: clamp(2.3rem, 11.5vw, 3.35rem); }
   .section-heading h2 br { display: none; }
