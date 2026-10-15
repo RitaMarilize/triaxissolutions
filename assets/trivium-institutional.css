@@ -27,10 +27,10 @@ main { overflow: clip; }
 .skip-link { position: fixed; z-index: 100; top: 8px; left: 12px; padding: 10px 14px; color: #fff; background: var(--navy); border-radius: 999px; transform: translateY(-160%); transition: transform .2s ease; }
 .skip-link:focus { transform: none; }
 
-.site-header { position: fixed; z-index: 50; inset: 0 0 auto; height: var(--header); color: var(--ink); background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(16px); transition: box-shadow .25s ease, background .25s ease; }
-.site-header.scrolled { background: rgba(255,255,255,.985); box-shadow: 0 8px 26px rgba(16,30,51,.07); }
+.site-header { position: fixed; z-index: 50; inset: 0 0 auto; height: var(--header); color: var(--ink); background: #fff; border-bottom: 1px solid #eef1f4; transition: box-shadow .25s ease, background .25s ease; }
+.site-header.scrolled { background: #fff; box-shadow: 0 8px 26px rgba(16,30,51,.07); }
 .header-inner { height: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 32px; }
-.brand { width: 174px; height: 58px; display: grid; place-items: center; overflow: hidden; }
+.brand { width: 174px; height: 58px; display: grid; place-items: center; overflow: hidden; background: #fff; }
 .brand img { width: 100%; height: auto; }
 .main-nav { justify-self: end; display: flex; align-items: center; gap: 2px; }
 .main-nav a { position: relative; padding: 12px 13px; color: #596474; font-size: .78rem; font-weight: 650; }
