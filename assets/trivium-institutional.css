@@ -167,9 +167,9 @@ main { overflow: clip; }
 .mobile-app-button { min-height: clamp(9px,1.02vw,17px); display: grid; place-items: center; border-radius: 3px; color: #fff; background: #0751b5; font-size: clamp(2.5px,.28vw,4.5px); font-weight: 850; letter-spacing: .06em; }
 
 .team { background: var(--surface); }
-.team-heading { display: grid; grid-template-columns: 1.28fr .72fr; gap: clamp(46px,6vw,86px); align-items: end; }
+.team-heading { display: grid; grid-template-columns: 1.28fr .72fr; gap: clamp(46px,6vw,86px); align-items: center; }
 .team-heading h2 { font-size: clamp(2.7rem,4vw,3.9rem); white-space: nowrap; }
-.team-heading > p { max-width: 440px; margin: 0 0 8px; padding: 4px 0 4px 34px; border-left: 1px solid #cfd9e4; color: #66778a; font-size: 1.02rem; line-height: 1.62; }
+.team-heading > p { max-width: 440px; margin: 0; padding: 4px 0 4px 34px; border-left: 1px solid #cfd9e4; color: #66778a; font-size: 1.02rem; line-height: 1.62; }
 .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 58px; }
 .person { overflow: hidden; display: flex; min-width: 0; flex-direction: column; border: 1px solid #dce4ec; border-radius: 16px; background: #fff; box-shadow: 0 12px 32px rgba(19,43,72,.055); transition: transform .32s var(--ease), box-shadow .32s var(--ease), border-color .32s var(--ease); }
 .person:hover { transform: translateY(-5px); border-color: #c7d6e5; box-shadow: 0 22px 44px rgba(19,43,72,.1); }
