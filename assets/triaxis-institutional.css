@@ -234,7 +234,17 @@ main { position: relative; z-index: 1; overflow: clip; }
 
 .site-footer { position: relative; z-index: 1; padding: 58px 0 24px; color: #cbd5df; background: #0c1727; }
 .footer-main { display: flex; justify-content: space-between; gap: 60px; align-items: flex-start; padding-bottom: 42px; }
-.footer-brand img { width: 250px; padding: 9px 12px; border-radius: 10px; background: #fff; }
+.footer-brand img {
+  width: 260px;
+  height: 80px;
+  object-fit: cover;
+  object-position: center 47%;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  filter: brightness(0) invert(1);
+  opacity: .96;
+}
 .footer-brand p { max-width: 430px; margin: 18px 0 0; color: #8f9dad; line-height: 1.6; }
 .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 24px; padding-top: 12px; }
 .footer-links a { color: #aeb9c5; font-size: .8rem; }
