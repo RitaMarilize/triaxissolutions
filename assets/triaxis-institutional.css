@@ -320,6 +320,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @media (max-width: 650px) {
   :root { --shell: min(100% - 28px, 520px); }
   .brand { width: 148px; height: 48px; }
+  .brand img { transform: translateY(-5px); }
   .hero { min-height: auto; padding: calc(var(--header) + 62px) 0 72px; }
   .hero-inner { gap: 42px; }
   .hero h1 { font-size: clamp(2.62rem, 12.6vw, 3.9rem); line-height: 1; letter-spacing: -.058em; }
