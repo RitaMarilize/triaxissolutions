@@ -196,10 +196,9 @@
       let message = '';
       const value = field.value.trim();
       if (field.required && !value) message = 'Preencha este campo.';
-      if (!message && field.name === 'channel') {
+      if (!message && field.name === 'email') {
         const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-        const isPhone = value.replace(/\D/g, '').length >= 10;
-        if (!isEmail && !isPhone) message = 'Informe um email ou WhatsApp válido.';
+        if (!isEmail) message = 'Informe um e-mail válido.';
       }
       showError(field, message);
       if (message) valid = false;
