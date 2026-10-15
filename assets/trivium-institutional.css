@@ -108,11 +108,15 @@ main { overflow: clip; }
 .section-heading > p:last-child, .difference-intro > p:last-child { max-width: 600px; margin: 26px 0 0; color: var(--muted); font-size: 1.04rem; line-height: 1.65; }
 
 .solutions { background: var(--surface); }
-.solution-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 64px; }
-.solution-card { min-height: 340px; display: flex; flex-direction: column; align-items: flex-start; padding: 34px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: transform .3s var(--ease), border-color .3s ease, box-shadow .3s ease; }
-.solution-card:hover { transform: translateY(-5px); border-color: #aebdcd; box-shadow: 0 18px 42px rgba(16,30,51,.07); }
-.solution-card svg { width: 35px; height: 35px; color: var(--blue); fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; }
-.solution-card h3 { max-width: 280px; margin: 68px 0 16px; font-size: clamp(1.55rem, 2.2vw, 2rem); line-height: 1.12; letter-spacing: -.04em; }
+.solution-coverflow { position: relative; width: 100%; margin-top: 64px; padding: 26px 0 40px; overflow: hidden; outline: none; cursor: grab; touch-action: pan-y; perspective: 1120px; }
+.solution-coverflow:active { cursor: grabbing; }
+.solution-coverflow:focus-visible { outline: 3px solid #7da4c9; outline-offset: 5px; }
+.solution-grid { position: relative; height: 372px; transform-style: preserve-3d; user-select: none; }
+.solution-card { position: absolute; top: 0; left: 50%; width: clamp(290px, 31vw, 390px); height: 352px; display: flex; flex-direction: column; align-items: flex-start; padding: 32px; border: 1px solid #cfd9e4; border-radius: 16px; background: #fff; box-shadow: 0 14px 34px rgba(16,30,51,.08); transform-origin: center; will-change: transform, opacity; backface-visibility: hidden; }
+.solution-card[data-selected="true"] { border-color: #8fa9c5; box-shadow: 0 26px 56px rgba(16,30,51,.16); }
+.solution-icon { width: 54px; height: 54px; display: grid; place-items: center; border-radius: 12px; color: var(--blue); background: #edf3f9; }
+.solution-card svg { width: 30px; height: 30px; color: inherit; fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; }
+.solution-card h3 { max-width: 280px; margin: 48px 0 16px; font-size: clamp(1.55rem, 2.2vw, 2rem); line-height: 1.12; letter-spacing: -.04em; }
 .solution-card p { max-width: 310px; margin: 0; color: var(--muted); line-height: 1.62; }
 .solution-card a { margin-top: auto; padding-top: 30px; color: var(--blue); font-size: .75rem; font-weight: 800; }
 
@@ -202,8 +206,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-copy-column { max-width: 650px; }
   .hero h1 { font-size: clamp(3.15rem, 8.5vw, 5rem); }
   .hero-dashboard-wrap { width: min(100%, 720px); margin-inline: auto; }
-  .solution-grid, .difference-grid { grid-template-columns: 1fr; }
-  .solution-card { min-height: 280px; }
+  .difference-grid { grid-template-columns: 1fr; }
+  .solution-coverflow { margin-inline: calc((100vw - var(--shell)) / -2); width: 100vw; }
   .difference-grid article { min-height: 0; padding: 28px 0 34px; }
   .difference-grid article + article { padding-left: 0; border-left: 0; }
   .difference-grid h3 { margin-top: 42px; }
@@ -247,9 +251,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .section-heading h2, .project-copy h2, .difference-intro h2, .team-heading h2, .contact-copy h2 { font-size: clamp(2.3rem, 11.5vw, 3.35rem); }
   .section-heading h2 br, .difference-intro h2 br, .team-heading h2 br { display: none; }
   .section-label { margin-bottom: 18px; }
-  .solution-grid, .difference-grid, .team-grid { margin-top: 48px; }
-  .solution-card { min-height: 300px; padding: 28px; }
-  .solution-card h3 { margin-top: 52px; }
+  .difference-grid, .team-grid { margin-top: 48px; }
+  .solution-coverflow { margin-top: 48px; padding: 18px 0 30px; perspective: 850px; }
+  .solution-grid { height: 350px; }
+  .solution-card { width: clamp(270px, 82vw, 320px); height: 326px; padding: 26px; border-radius: 14px; }
+  .solution-card h3 { margin-top: 38px; }
   .project-copy h3 { margin-top: 34px; }
   .project-visual { border-radius: 12px; }
   .project-topbar { height: 34px; }

@@ -53,6 +53,130 @@
     sections.forEach(section => navObserver.observe(section));
   }
 
+  const coverflow = document.querySelector('[data-solution-coverflow]');
+  if (coverflow) {
+    const cards = [...coverflow.querySelectorAll('.solution-card')];
+    const count = cards.length;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let position = count > 1 ? 1 : 0;
+    let target = position;
+    let cardWidth = 0;
+    let animationFrame = null;
+    let drag = null;
+
+    const selectedIndex = value => ((Math.round(value) % count) + count) % count;
+
+    const paint = () => {
+      if (!cardWidth || !count) return;
+      const pitch = cardWidth * 1.08;
+      const selected = selectedIndex(position);
+
+      cards.forEach((card, index) => {
+        let offset = index - position;
+        offset = ((offset % count) + count) % count;
+        if (offset > count / 2) offset -= count;
+
+        const distance = Math.abs(offset);
+        const ramp = Math.pow(distance, .62);
+        const tilt = Math.min(28 * ramp, 78) * Math.sign(offset);
+        const edge = Math.min(1, Math.max(0, (count / 2 - distance) * 2));
+
+        card.style.transform = `translateX(calc(-50% + ${offset * pitch}px)) translateZ(${-cardWidth * .42 * ramp}px) rotateY(${-tilt}deg)`;
+        card.style.opacity = String(Math.max(0, 1 - .12 * distance) * edge);
+        card.style.zIndex = String(100 - Math.round(distance * 10));
+        card.dataset.selected = String(index === selected && distance < .5);
+        card.setAttribute('aria-current', index === selected ? 'true' : 'false');
+      });
+    };
+
+    const settle = next => {
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+      target = next;
+
+      if (reducedMotion) {
+        position = target;
+        paint();
+        return;
+      }
+
+      const step = () => {
+        const remaining = target - position;
+        if (Math.abs(remaining) < .0004) {
+          position = target;
+          paint();
+          animationFrame = null;
+          return;
+        }
+        position += remaining * .16;
+        paint();
+        animationFrame = requestAnimationFrame(step);
+      };
+      animationFrame = requestAnimationFrame(step);
+    };
+
+    const goTo = index => settle(index + Math.round((target - index) / count) * count);
+    const nudge = amount => settle(Math.round(target) + amount);
+
+    coverflow.addEventListener('pointerdown', event => {
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+      coverflow.setPointerCapture(event.pointerId);
+      target = position;
+      drag = { id: event.pointerId, x: event.clientX, start: position, velocity: 0, time: performance.now(), moved: false };
+    });
+
+    coverflow.addEventListener('pointermove', event => {
+      if (!drag || drag.id !== event.pointerId || !cardWidth) return;
+      const now = performance.now();
+      const previous = position;
+      const movement = event.clientX - drag.x;
+      position = drag.start - movement / (cardWidth * 1.08);
+      drag.velocity = ((position - previous) / Math.max(now - drag.time, 1)) * 1000;
+      drag.time = now;
+      drag.moved = drag.moved || Math.abs(movement) > 6;
+      paint();
+    });
+
+    const finishDrag = event => {
+      if (!drag || drag.id !== event.pointerId) return;
+      const carried = Math.max(-2, Math.min(2, drag.velocity * .18));
+      settle(Math.round(position + carried));
+      window.setTimeout(() => { drag = null; }, 0);
+    };
+
+    coverflow.addEventListener('pointerup', finishDrag);
+    coverflow.addEventListener('pointercancel', finishDrag);
+    coverflow.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        nudge(-1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        nudge(1);
+      }
+    });
+
+    cards.forEach((card, index) => {
+      card.addEventListener('click', event => {
+        if (drag?.moved) {
+          event.preventDefault();
+          return;
+        }
+        if (selectedIndex(position) !== index) {
+          event.preventDefault();
+          goTo(index);
+        }
+      });
+    });
+
+    const measure = () => {
+      cardWidth = cards[0]?.offsetWidth || 0;
+      paint();
+    };
+    measure();
+    new ResizeObserver(measure).observe(coverflow);
+  }
+
   document.querySelector('#footer-year').textContent = new Date().getFullYear();
 
   const form = document.querySelector('#contact-form');
@@ -75,7 +199,7 @@
       if (!message && field.name === 'channel') {
         const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         const isPhone = value.replace(/\D/g, '').length >= 10;
-        if (!isEmail && !isPhone) message = 'Informe um e-mail ou WhatsApp válido.';
+        if (!isEmail && !isPhone) message = 'Informe um email ou WhatsApp válido.';
       }
       showError(field, message);
       if (message) valid = false;
