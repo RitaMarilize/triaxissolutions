@@ -72,7 +72,11 @@
       let message = '';
       const value = field.value.trim();
       if (field.required && !value) message = 'Preencha este campo.';
-      if (!message && field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) message = 'Informe um e-mail válido.';
+      if (!message && field.name === 'channel') {
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        const isPhone = value.replace(/\D/g, '').length >= 10;
+        if (!isEmail && !isPhone) message = 'Informe um e-mail ou WhatsApp válido.';
+      }
       showError(field, message);
       if (message) valid = false;
     });
