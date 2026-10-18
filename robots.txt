@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://triaxis-solutions.ritamariliza.chatgpt.site/sitemap.xml
+Sitemap: https://triaxissolutions.com.br/sitemap.xml
