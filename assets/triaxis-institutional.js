@@ -185,8 +185,11 @@
   const chatPanel = chatWidget?.querySelector('.chat-panel');
   const chatClose = chatWidget?.querySelector('.chat-close');
   const chatForm = chatWidget?.querySelector('[data-chat-form]');
+  const chatName = chatWidget?.querySelector('#chat-name');
+  const chatEmail = chatWidget?.querySelector('#chat-email');
   const chatMessage = chatWidget?.querySelector('#chat-message');
   const chatStatus = chatWidget?.querySelector('.chat-status');
+  const chatOptions = [...(chatWidget?.querySelectorAll('[data-chat-option]') || [])];
 
   const setChatOpen = open => {
     if (!chatWidget || !chatLauncher || !chatPanel) return;
@@ -194,7 +197,7 @@
     chatLauncher.setAttribute('aria-expanded', String(open));
     chatLauncher.setAttribute('aria-label', open ? 'Atendimento aberto' : 'Abrir atendimento');
     chatPanel.setAttribute('aria-hidden', String(!open));
-    if (open) window.setTimeout(() => chatMessage?.focus(), 180);
+    if (open) window.setTimeout(() => chatName?.focus(), 180);
   };
 
   chatLauncher?.addEventListener('click', () => setChatOpen(!chatWidget.classList.contains('is-open')));
@@ -208,13 +211,31 @@
       chatLauncher?.focus();
     }
   });
+  const clearChatStatus = () => {
+    if (!chatStatus) return;
+    chatStatus.textContent = '';
+    chatStatus.classList.remove('is-success');
+  };
+
+  chatOptions.forEach(option => option.addEventListener('click', () => {
+    chatOptions.forEach(item => item.classList.toggle('is-selected', item === option));
+    if (chatMessage) {
+      chatMessage.value = option.dataset.chatOption || '';
+      chatMessage.dispatchEvent(new Event('input'));
+    }
+    chatName?.focus();
+  }));
+
+  [chatName, chatEmail].forEach(field => field?.addEventListener('input', clearChatStatus));
   chatMessage?.addEventListener('input', () => {
-    if (chatStatus) chatStatus.textContent = '';
+    clearChatStatus();
     chatMessage.style.height = '42px';
     chatMessage.style.height = `${Math.min(chatMessage.scrollHeight, 96)}px`;
   });
   chatForm?.addEventListener('submit', event => {
     event.preventDefault();
+    const name = chatName?.value.trim();
+    const email = chatEmail?.value.trim();
     const message = chatMessage?.value.trim();
     if (!message) {
       if (chatStatus) chatStatus.textContent = 'Escreva uma mensagem para continuar.';
@@ -222,7 +243,11 @@
       return;
     }
     const subject = 'Mensagem pelo site da Triaxis Solutions';
-    const body = `Olá, equipe Triaxis Solutions!\n\n${message}\n\nMensagem preparada pelo atendimento do site.`;
+    const body = `Olá, equipe Triaxis Solutions!\n\nNome: ${name}\nE-mail: ${email}\n\nMensagem:\n${message}\n\nMensagem preparada pelo atendimento do site.`;
+    if (chatStatus) {
+      chatStatus.textContent = 'Mensagem preparada. Conclua o envio no seu aplicativo de e-mail.';
+      chatStatus.classList.add('is-success');
+    }
     window.location.href = `mailto:${CHAT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 
