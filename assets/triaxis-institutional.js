@@ -183,8 +183,9 @@
 
     gsap.registerPlugin(ScrollTrigger);
     const motion = gsap.matchMedia();
+    const motionOverride = new URLSearchParams(window.location.search).get('motion') === 'on';
 
-    motion.add('(prefers-reduced-motion: no-preference)', () => {
+    const setupMotion = () => {
       const animatedLayers = [];
       const trackLayer = layer => {
         if (!layer) return;
@@ -202,7 +203,8 @@
 
       titles.forEach(title => {
         const baseSpacing = Number.parseFloat(getComputedStyle(title).letterSpacing) || 0;
-        const spread = Math.min(4.5, Math.max(2, title.getBoundingClientRect().width * .005));
+        const spread = Math.min(12, Math.max(6, title.getBoundingClientRect().width * .012));
+        const isHeroTitle = title.id === 'hero-title';
 
         gsap.fromTo(title,
           { letterSpacing: `${baseSpacing + spread}px` },
@@ -210,9 +212,9 @@
             letterSpacing: `${baseSpacing}px`,
             ease: 'none',
             scrollTrigger: {
-              trigger: title,
-              start: 'top 92%',
-              end: 'top 42%',
+              trigger: isHeroTitle ? '.hero' : title,
+              start: isHeroTitle ? 'top top' : 'top 92%',
+              end: isHeroTitle ? 'bottom 40%' : 'top 42%',
               scrub: .55,
               invalidateOnRefresh: true
             }
@@ -240,19 +242,19 @@
       };
 
       document.querySelectorAll('.solution-card').forEach((card, index) => {
-        parallax(card.querySelector('.solution-icon'), card, 10 + index * 2, -10 - index * 2);
+        parallax(card.querySelector('.solution-icon'), card, 24 + index * 3, -24 - index * 3);
       });
 
       document.querySelectorAll('.person').forEach((card, index) => {
-        parallax(card.querySelector('.person-photo'), card, 7 + index * 2, -7 - index * 2);
+        parallax(card.querySelector('.person-photo'), card, 18 + index * 3, -18 - index * 3);
       });
 
       document.querySelectorAll('.dashboard-metrics article').forEach((card, index) => {
-        parallax(card, '.hero-dashboard-wrap', 5 + index * 2, -5 - index * 2);
+        parallax(card, '.hero-dashboard-wrap', 12 + index * 3, -12 - index * 3);
       });
 
-      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap', 8, -8);
-      parallax(document.querySelector('.project-media'), '.project-showcase', 10, -10);
+      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap', 18, -18);
+      parallax(document.querySelector('.project-media'), '.project-showcase', 24, -24);
 
       return () => {
         animatedLayers.forEach(layer => {
@@ -261,7 +263,13 @@
         });
         titles.forEach(title => gsap.set(title, { clearProps: 'letterSpacing' }));
       };
-    });
+    };
+
+    if (motionOverride) {
+      setupMotion();
+    } else {
+      motion.add('(prefers-reduced-motion: no-preference)', setupMotion);
+    }
   };
 
   initScrollAnimations();
