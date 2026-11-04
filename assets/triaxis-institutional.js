@@ -177,6 +177,95 @@
     new ResizeObserver(measure).observe(coverflow);
   }
 
+  const initScrollAnimations = () => {
+    const { gsap, ScrollTrigger } = window;
+    if (!gsap || !ScrollTrigger) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const motion = gsap.matchMedia();
+
+    motion.add('(prefers-reduced-motion: no-preference)', () => {
+      const animatedLayers = [];
+      const trackLayer = layer => {
+        if (!layer) return;
+        animatedLayers.push(layer);
+        gsap.set(layer, { willChange: 'transform' });
+      };
+
+      const titles = gsap.utils.toArray([
+        '#hero-title',
+        '#solutions-title',
+        '#project-title',
+        '#team-title',
+        '#contact-title'
+      ]);
+
+      titles.forEach(title => {
+        const baseSpacing = Number.parseFloat(getComputedStyle(title).letterSpacing) || 0;
+        const spread = Math.min(4.5, Math.max(2, title.getBoundingClientRect().width * .005));
+
+        gsap.fromTo(title,
+          { letterSpacing: `${baseSpacing + spread}px` },
+          {
+            letterSpacing: `${baseSpacing}px`,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: title,
+              start: 'top 92%',
+              end: 'top 42%',
+              scrub: .55,
+              invalidateOnRefresh: true
+            }
+          }
+        );
+      });
+
+      const parallax = (layer, trigger, fromY, toY) => {
+        if (!layer || !trigger) return;
+        trackLayer(layer);
+        gsap.fromTo(layer,
+          { y: fromY },
+          {
+            y: toY,
+            ease: 'none',
+            scrollTrigger: {
+              trigger,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: .7,
+              invalidateOnRefresh: true
+            }
+          }
+        );
+      };
+
+      document.querySelectorAll('.solution-card').forEach((card, index) => {
+        parallax(card.querySelector('.solution-icon'), card, 10 + index * 2, -10 - index * 2);
+      });
+
+      document.querySelectorAll('.person').forEach((card, index) => {
+        parallax(card.querySelector('.person-photo'), card, 7 + index * 2, -7 - index * 2);
+      });
+
+      document.querySelectorAll('.dashboard-metrics article').forEach((card, index) => {
+        parallax(card, '.hero-dashboard-wrap', 5 + index * 2, -5 - index * 2);
+      });
+
+      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap', 8, -8);
+      parallax(document.querySelector('.project-media'), '.project-showcase', 10, -10);
+
+      return () => {
+        animatedLayers.forEach(layer => {
+          layer.style.removeProperty('will-change');
+          gsap.set(layer, { clearProps: 'transform' });
+        });
+        titles.forEach(title => gsap.set(title, { clearProps: 'letterSpacing' }));
+      };
+    });
+  };
+
+  initScrollAnimations();
+
   document.querySelector('#footer-year').textContent = new Date().getFullYear();
 
   const CHAT_EMAIL = 'triviumgestao@outlook.com';
