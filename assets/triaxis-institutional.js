@@ -203,7 +203,7 @@
 
       titles.forEach(title => {
         const baseSpacing = Number.parseFloat(getComputedStyle(title).letterSpacing) || 0;
-        const spread = Math.min(12, Math.max(6, title.getBoundingClientRect().width * .012));
+        const spread = Math.min(16, Math.max(10, title.getBoundingClientRect().width * .018));
         const isHeroTitle = title.id === 'hero-title';
 
         gsap.fromTo(title,
@@ -215,26 +215,27 @@
               trigger: isHeroTitle ? '.hero' : title,
               start: isHeroTitle ? 'top top' : 'top 92%',
               end: isHeroTitle ? 'bottom 40%' : 'top 42%',
-              scrub: .55,
+              scrub: .35,
               invalidateOnRefresh: true
             }
           }
         );
       });
 
-      const parallax = (layer, trigger, fromY, toY) => {
+      const parallax = (layer, trigger, from, to, scrub = .45) => {
         if (!layer || !trigger) return;
         trackLayer(layer);
         gsap.fromTo(layer,
-          { y: fromY },
+          { ...from, force3D: true },
           {
-            y: toY,
+            ...to,
+            force3D: true,
             ease: 'none',
             scrollTrigger: {
               trigger,
               start: 'top bottom',
               end: 'bottom top',
-              scrub: .7,
+              scrub,
               invalidateOnRefresh: true
             }
           }
@@ -242,19 +243,61 @@
       };
 
       document.querySelectorAll('.solution-card').forEach((card, index) => {
-        parallax(card.querySelector('.solution-icon'), card, 24 + index * 3, -24 - index * 3);
+        const direction = index % 2 === 0 ? -1 : 1;
+        card.querySelectorAll('.solution-icon, h3, p, a').forEach((layer, layerIndex) => {
+          const distance = 22 + layerIndex * 7;
+          parallax(layer, '.solution-coverflow',
+            { x: direction * distance, y: 30 + layerIndex * 4, rotation: direction * 1.4 },
+            { x: direction * -distance * .45, y: -22 - layerIndex * 3, rotation: direction * -.45 }
+          );
+        });
       });
 
       document.querySelectorAll('.person').forEach((card, index) => {
-        parallax(card.querySelector('.person-photo'), card, 18 + index * 3, -18 - index * 3);
+        const direction = index % 2 === 0 ? -1 : 1;
+        parallax(card.querySelector('.person-photo'), card,
+          { x: direction * 18, y: 38 + index * 4, rotation: direction * 1.2 },
+          { x: direction * -10, y: -30 - index * 4, rotation: direction * -.4 }
+        );
       });
 
       document.querySelectorAll('.dashboard-metrics article').forEach((card, index) => {
-        parallax(card, '.hero-dashboard-wrap', 12 + index * 3, -12 - index * 3);
+        const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
+        parallax(card, '.hero-dashboard-wrap',
+          { x: direction * 22, y: 34 + index * 7, rotation: direction * 1.1 },
+          { x: direction * -8, y: -24 - index * 5, rotation: direction * -.35 }
+        );
       });
 
-      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap', 18, -18);
-      parallax(document.querySelector('.project-media'), '.project-showcase', 24, -24);
+      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap',
+        { x: 24, y: 28, rotation: .7 },
+        { x: -10, y: -22, rotation: -.2 }
+      );
+      parallax(document.querySelector('.dashboard-backdrop-one'), '.hero-dashboard-wrap',
+        { x: -34, y: 22, rotation: -1.4 },
+        { x: 18, y: -20, rotation: .55 }
+      );
+      parallax(document.querySelector('.dashboard-backdrop-two'), '.hero-dashboard-wrap',
+        { x: 30, y: 36, rotation: 1.2 },
+        { x: -16, y: -26, rotation: -.45 }
+      );
+
+      parallax(document.querySelector('.project-laptop'), '.project-showcase',
+        { x: -52, y: 48, rotation: -2.4 },
+        { x: 18, y: -34, rotation: .65 }
+      );
+      parallax(document.querySelector('.project-phone'), '.project-showcase',
+        { x: 44, y: 70, rotation: 3.2 },
+        { x: -16, y: -46, rotation: -.8 }
+      );
+      parallax(document.querySelector('.project-shape-one'), '.project-showcase',
+        { x: -38, y: 30, rotation: -2 },
+        { x: 22, y: -28, rotation: .8 }
+      );
+      parallax(document.querySelector('.project-shape-two'), '.project-showcase',
+        { x: 34, y: 42, rotation: 2.2 },
+        { x: -20, y: -34, rotation: -.7 }
+      );
 
       return () => {
         animatedLayers.forEach(layer => {
