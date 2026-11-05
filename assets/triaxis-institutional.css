@@ -113,12 +113,13 @@ main { position: relative; z-index: 1; overflow: visible; }
 .distribution-card li { display: flex; align-items: center; gap: 6px; }
 .distribution-card li i { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); }
 .distribution-card li:nth-child(2) i { background: #7d98b6; }.distribution-card li:nth-child(3) i { background: #d1dbe5; }
-.hero-login-preview { min-height: 520px; }
-.hero-project-laptop { position: absolute; left: 4%; top: 14%; width: 82%; filter: drop-shadow(0 26px 24px rgba(34,63,94,.2)); }
+.hero-login-preview { min-height: 520px; perspective: 1300px; }
+.hero-project-laptop { position: absolute; z-index: 1; left: 4%; top: 14%; width: 82%; filter: drop-shadow(0 26px 24px rgba(34,63,94,.2)); }
 .hero-project-laptop-screen { display: block; overflow: hidden; padding: 9px 9px 18px; border: 3px solid #101a27; border-bottom-width: 10px; border-radius: 15px 15px 8px 8px; background: #101a27; }
 .hero-project-laptop-screen img { width: 100%; aspect-ratio: 16/10; display: block; object-fit: cover; object-position: center; }
 .hero-project-laptop-base { display: block; width: 112%; height: 13px; margin-left: -6%; border-radius: 2px 2px 50% 50%; background: linear-gradient(180deg,#dbe3eb,#8d99a5); box-shadow: 0 4px 5px rgba(22,38,55,.2); }
-.hero-project-phone { position: absolute; right: 3%; bottom: 7%; width: 24%; padding: 8px; border: 3px solid #101a27; border-radius: 22px; background: #101a27; box-shadow: 0 20px 34px rgba(26,54,82,.28); transform: rotate(1.5deg); }
+.hero-project-phone { position: absolute; z-index: 2; right: 3%; bottom: 7%; width: 24%; padding: 8px; border: 3px solid #101a27; border-radius: 22px; background: #101a27; box-shadow: 0 20px 34px rgba(26,54,82,.28); transform: rotate(1.5deg); }
+.hero-project-laptop, .hero-project-phone { backface-visibility: hidden; }
 .hero-project-phone-speaker { position: absolute; top: 5px; left: 50%; z-index: 2; width: 26%; height: 3px; border-radius: 99px; background: #344150; transform: translateX(-50%); }
 .hero-project-phone-screen { aspect-ratio: 9/17; display: block; overflow: hidden; border-radius: 14px; background: #edf3fa; }
 .hero-mobile-app { position: relative; width: 100%; height: 100%; display: block; overflow: hidden; padding: 16% 7% 8%; background: linear-gradient(165deg,#f8fbff 0%,#edf4fc 62%,#e5eff9 100%); }

@@ -363,6 +363,63 @@
         }, '-=.04');
     }
 
+    const heroPreview = document.querySelector('.hero-login-preview');
+    const heroLaptop = heroPreview?.querySelector('.hero-project-laptop');
+    const heroPhone = heroPreview?.querySelector('.hero-project-phone');
+
+    if (heroPreview && heroLaptop && heroPhone) {
+      const heroDepthMedia = gsap.matchMedia();
+      heroDepthMedia.add('(min-width: 651px)', () => {
+        const depthTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+            invalidateOnRefresh: true
+          }
+        });
+
+        depthTimeline
+          .fromTo(heroLaptop, {
+            rotationX: 5,
+            rotationY: -10,
+            z: 0,
+            y: 26,
+            force3D: true
+          }, {
+            rotationX: 0,
+            rotationY: 3,
+            z: 35,
+            y: -14,
+            duration: 1,
+            ease: 'none'
+          }, 0)
+          .fromTo(heroPhone, {
+            rotationX: -5,
+            rotationY: 14,
+            rotationZ: 1.5,
+            z: 70,
+            y: 34,
+            force3D: true
+          }, {
+            rotationX: 2,
+            rotationY: -5,
+            rotationZ: 1.5,
+            z: 150,
+            y: -20,
+            duration: 1,
+            ease: 'none'
+          }, 0);
+
+        return () => {
+          depthTimeline.scrollTrigger?.kill();
+          depthTimeline.kill();
+          gsap.set([heroLaptop, heroPhone], { clearProps: 'transform' });
+        };
+      });
+    }
+
     const choreography = document.querySelector('[data-scroll-choreography]');
     const mainScreen = choreography?.querySelector('[data-choreo-main]');
     const stockScreen = choreography?.querySelector('[data-choreo-piece="stock"]');
