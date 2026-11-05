@@ -155,6 +155,7 @@ main { position: relative; z-index: 1; overflow: visible; }
 .solution-coverflow:focus-visible { outline: 3px solid #7da4c9; outline-offset: 5px; }
 .solution-grid { position: relative; height: 372px; transform-style: preserve-3d; user-select: none; }
 .solution-card { position: absolute; top: 0; left: 50%; width: clamp(290px, 31vw, 390px); height: 352px; transform-origin: center; transform-style: preserve-3d; perspective: 1100px; will-change: transform, opacity; }
+.solution-card-motion { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; will-change: transform; }
 .solution-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; will-change: transform; }
 .solution-card-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; padding: 32px; overflow: hidden; border: 1px solid #cfd9e4; border-radius: 16px; background: #fff; box-shadow: 0 14px 34px rgba(16,30,51,.08); backface-visibility: hidden; }
 .solution-card[data-selected="true"] .solution-card-face { border-color: #8fa9c5; box-shadow: 0 26px 56px rgba(16,30,51,.16); }
@@ -320,6 +321,15 @@ main { position: relative; z-index: 1; overflow: visible; }
 .reveal { opacity: 0; transform: translate3d(0,20px,0); transition: opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1); }
 .reveal.visible { opacity: 1; transform: none; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #7da4c9; outline-offset: 3px; }
+
+@media (min-width: 1001px) {
+  .solutions { min-height: 220vh; padding: 0; }
+  .solutions > .shell { position: sticky; top: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--header) + 22px) 0 30px; }
+  .solutions .solution-coverflow { margin-top: 38px; padding-top: 18px; padding-bottom: 18px; }
+  .motion-disabled .solutions { min-height: 0; padding: 132px 0; }
+  .motion-disabled .solutions > .shell { position: relative; min-height: 0; display: block; padding: 0; }
+  .motion-disabled .solutions .solution-coverflow { margin-top: 64px; padding: 26px 0 40px; }
+}
 
 @media (max-width: 1000px) {
   :root { --header: 76px; --shell: min(100% - 40px, 780px); }

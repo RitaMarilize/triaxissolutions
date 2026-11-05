@@ -201,6 +201,12 @@
         return;
       }
 
+      if (item.matches('.solution-coverflow')) {
+        item.classList.add('visible');
+        gsap.set(item, { opacity: 1, x: 0, y: 0, transition: 'none' });
+        return;
+      }
+
       const isLargeBlock = item.matches([
         '.solution-coverflow',
         '.project-showcase',
@@ -290,31 +296,54 @@
     });
 
     const solutionCoverflow = document.querySelector('[data-solution-coverflow]');
+    const solutionSection = document.querySelector('.solutions');
+    const solutionCardMotions = [...document.querySelectorAll('.solution-card-motion')];
     const solutionCardInners = [...document.querySelectorAll('.solution-card-inner')];
-    if (solutionCoverflow && solutionCardInners.length) {
-      gsap.set(solutionCardInners, {
-        rotationY: 180,
-        rotationZ: index => index % 2 ? 1.4 : -1.4,
+    if (solutionSection && solutionCoverflow && solutionCardMotions.length && solutionCardInners.length) {
+      const desktopSolutions = window.matchMedia('(min-width: 1001px)').matches;
+
+      gsap.set(solutionCardMotions, {
+        xPercent: index => desktopSolutions ? [88, 0, -88][index] : 0,
+        y: index => desktopSolutions ? [54, 8, 54][index] : 24,
+        rotationZ: index => desktopSolutions ? [-16, 0, 16][index] : 0,
         transformOrigin: '50% 50%',
         force3D: true,
         willChange: 'transform'
       });
 
-      gsap.timeline({
+      gsap.set(solutionCardInners, {
+        rotationY: 180,
+        transformOrigin: '50% 50%',
+        force3D: true,
+        willChange: 'transform'
+      });
+
+      const solutionTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: solutionCoverflow,
-          start: 'top 94%',
-          end: 'top 42%',
+          trigger: solutionSection,
+          start: desktopSolutions ? 'top top' : 'top 90%',
+          end: desktopSolutions ? 'bottom bottom' : 'bottom 28%',
           scrub: true,
           invalidateOnRefresh: true
         }
+      });
+
+      solutionTimeline.to(solutionCardMotions, {
+        xPercent: 0,
+        y: 0,
+        rotationZ: 0,
+        duration: .52,
+        ease: 'none'
       }).to(solutionCardInners, {
         rotationY: 0,
-        rotationZ: 0,
-        duration: 1,
-        stagger: .55,
+        duration: .16,
+        stagger: .13,
         ease: 'none'
-      });
+      }, .52).to(solutionCardInners, {
+        rotationY: 0,
+        duration: .06,
+        ease: 'none'
+      }, .94);
     }
 
     const heroPreview = document.querySelector('.hero-login-preview');
