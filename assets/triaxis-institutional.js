@@ -332,18 +332,18 @@
         xPercent: 0,
         y: 0,
         rotationZ: 0,
-        duration: .52,
+        duration: .46,
         ease: 'none'
       }).to(solutionCardInners, {
         rotationY: 0,
-        duration: .16,
-        stagger: .13,
+        duration: .14,
+        stagger: .11,
         ease: 'none'
-      }, .52).to(solutionCardInners, {
+      }, .46).to(solutionCardInners, {
         rotationY: 0,
-        duration: .06,
+        duration: .18,
         ease: 'none'
-      }, .94);
+      }, .82);
     }
 
     const heroPreview = document.querySelector('.hero-login-preview');
