@@ -195,12 +195,14 @@
         '#team-title',
         '#contact-title'
       ].join(','));
-      const initialY = isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
-      const duration = isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const isSolutionsTitle = item.matches('#solutions-title');
+      const initialY = isSolutionsTitle ? 78 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const initialX = isSolutionsTitle ? -26 : 0;
+      const duration = isSolutionsTitle ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
-        x: 0,
+        x: initialX,
         y: initialY,
         force3D: true,
         transition: 'none',
@@ -213,11 +215,11 @@
         x: 0,
         y: 0,
         duration,
-        ease: 'power2.out',
+        ease: isSolutionsTitle ? 'power3.out' : 'power2.out',
         overwrite: 'auto',
         scrollTrigger: {
           trigger: item,
-          start: 'top 88%',
+          start: isSolutionsTitle ? 'top 92%' : 'top 88%',
           once: true,
           toggleActions: 'play none none none'
         },
