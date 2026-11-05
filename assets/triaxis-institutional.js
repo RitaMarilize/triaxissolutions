@@ -26,20 +26,6 @@
   updateHeader();
   window.addEventListener('scroll', updateHeader, { passive: true });
 
-  const revealItems = [...document.querySelectorAll('.reveal')];
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
-    revealItems.forEach(item => item.classList.add('visible'));
-  } else {
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      });
-    }, { threshold: .12, rootMargin: '0px 0px -40px' });
-    revealItems.forEach(item => revealObserver.observe(item));
-  }
-
   const sections = [...document.querySelectorAll('main section[id]')];
   if ('IntersectionObserver' in window) {
     const navObserver = new IntersectionObserver(entries => {
@@ -177,145 +163,51 @@
     new ResizeObserver(measure).observe(coverflow);
   }
 
-  const initScrollAnimations = () => {
+  const initScrollReveals = () => {
     const { gsap, ScrollTrigger } = window;
-    if (!gsap || !ScrollTrigger) return;
+    const revealItems = [...document.querySelectorAll('.reveal')];
+    const motionSetting = new URLSearchParams(window.location.search).get('motion');
+    const reduceMotion = motionSetting === 'off' || (
+      motionSetting !== 'on' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+
+    if (reduceMotion || !gsap || !ScrollTrigger) {
+      revealItems.forEach(item => item.classList.add('visible'));
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger);
-    const motion = gsap.matchMedia();
-    const motionOverride = new URLSearchParams(window.location.search).get('motion') === 'on';
 
-    const setupMotion = () => {
-      const animatedLayers = [];
-      const trackLayer = layer => {
-        if (!layer) return;
-        animatedLayers.push(layer);
-        gsap.set(layer, { willChange: 'transform' });
-      };
-
-      const titles = gsap.utils.toArray([
-        '#hero-title',
-        '#solutions-title',
-        '#project-title',
-        '#team-title',
-        '#contact-title'
-      ]);
-
-      titles.forEach(title => {
-        const baseSpacing = Number.parseFloat(getComputedStyle(title).letterSpacing) || 0;
-        const spread = Math.min(16, Math.max(10, title.getBoundingClientRect().width * .018));
-        const isHeroTitle = title.id === 'hero-title';
-
-        gsap.fromTo(title,
-          { letterSpacing: `${baseSpacing + spread}px` },
-          {
-            letterSpacing: `${baseSpacing}px`,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: isHeroTitle ? '.hero' : title,
-              start: isHeroTitle ? 'top top' : 'top 92%',
-              end: isHeroTitle ? 'bottom 40%' : 'top 42%',
-              scrub: .35,
-              invalidateOnRefresh: true
-            }
-          }
-        );
+    revealItems.forEach(item => {
+      gsap.set(item, {
+        opacity: 0,
+        y: 20,
+        force3D: true,
+        transition: 'none',
+        willChange: 'transform, opacity'
       });
+      item.classList.add('visible');
 
-      const parallax = (layer, trigger, from, to, scrub = .45) => {
-        if (!layer || !trigger) return;
-        trackLayer(layer);
-        gsap.fromTo(layer,
-          { ...from, force3D: true },
-          {
-            ...to,
-            force3D: true,
-            ease: 'none',
-            scrollTrigger: {
-              trigger,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub,
-              invalidateOnRefresh: true
-            }
-          }
-        );
-      };
-
-      document.querySelectorAll('.solution-card').forEach((card, index) => {
-        const direction = index % 2 === 0 ? -1 : 1;
-        card.querySelectorAll('.solution-icon, h3, p, a').forEach((layer, layerIndex) => {
-          const distance = 22 + layerIndex * 7;
-          parallax(layer, '.solution-coverflow',
-            { x: direction * distance, y: 30 + layerIndex * 4, rotation: direction * 1.4 },
-            { x: direction * -distance * .45, y: -22 - layerIndex * 3, rotation: direction * -.45 }
-          );
-        });
+      gsap.to(item, {
+        opacity: 1,
+        y: 0,
+        duration: .85,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        scrollTrigger: {
+          trigger: item,
+          start: 'top 88%',
+          once: true,
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => gsap.set(item, {
+          clearProps: 'opacity,transform,transition,willChange'
+        })
       });
-
-      document.querySelectorAll('.person').forEach((card, index) => {
-        const direction = index % 2 === 0 ? -1 : 1;
-        parallax(card.querySelector('.person-photo'), card,
-          { x: direction * 18, y: 38 + index * 4, rotation: direction * 1.2 },
-          { x: direction * -10, y: -30 - index * 4, rotation: direction * -.4 }
-        );
-      });
-
-      document.querySelectorAll('.dashboard-metrics article').forEach((card, index) => {
-        const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
-        parallax(card, '.hero-dashboard-wrap',
-          { x: direction * 22, y: 34 + index * 7, rotation: direction * 1.1 },
-          { x: direction * -8, y: -24 - index * 5, rotation: direction * -.35 }
-        );
-      });
-
-      parallax(document.querySelector('.dashboard-main'), '.hero-dashboard-wrap',
-        { x: 24, y: 28, rotation: .7 },
-        { x: -10, y: -22, rotation: -.2 }
-      );
-      parallax(document.querySelector('.dashboard-backdrop-one'), '.hero-dashboard-wrap',
-        { x: -34, y: 22, rotation: -1.4 },
-        { x: 18, y: -20, rotation: .55 }
-      );
-      parallax(document.querySelector('.dashboard-backdrop-two'), '.hero-dashboard-wrap',
-        { x: 30, y: 36, rotation: 1.2 },
-        { x: -16, y: -26, rotation: -.45 }
-      );
-
-      parallax(document.querySelector('.project-laptop'), '.project-showcase',
-        { x: -52, y: 48, rotation: -2.4 },
-        { x: 18, y: -34, rotation: .65 }
-      );
-      parallax(document.querySelector('.project-phone'), '.project-showcase',
-        { x: 44, y: 70, rotation: 3.2 },
-        { x: -16, y: -46, rotation: -.8 }
-      );
-      parallax(document.querySelector('.project-shape-one'), '.project-showcase',
-        { x: -38, y: 30, rotation: -2 },
-        { x: 22, y: -28, rotation: .8 }
-      );
-      parallax(document.querySelector('.project-shape-two'), '.project-showcase',
-        { x: 34, y: 42, rotation: 2.2 },
-        { x: -20, y: -34, rotation: -.7 }
-      );
-
-      return () => {
-        animatedLayers.forEach(layer => {
-          layer.style.removeProperty('will-change');
-          gsap.set(layer, { clearProps: 'transform' });
-        });
-        titles.forEach(title => gsap.set(title, { clearProps: 'letterSpacing' }));
-      };
-    };
-
-    if (motionOverride) {
-      setupMotion();
-    } else {
-      motion.add('(prefers-reduced-motion: no-preference)', setupMotion);
-    }
+    });
   };
 
-  initScrollAnimations();
+  initScrollReveals();
 
   document.querySelector('#footer-year').textContent = new Date().getFullYear();
 
