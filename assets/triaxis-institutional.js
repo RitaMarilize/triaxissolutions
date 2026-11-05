@@ -179,6 +179,14 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    const mainTitleSelector = [
+      '#hero-title',
+      '#solutions-title',
+      '#project-title',
+      '#team-title',
+      '#contact-title'
+    ].join(',');
+
     revealItems.forEach(item => {
       if (item.closest('.hero')) {
         item.classList.add('visible');
@@ -186,29 +194,23 @@
         return;
       }
 
-      const containsMainTitle = Boolean(item.matches([
-        '#solutions-title',
-        '#project-title',
-        '#team-title',
-        '#contact-title'
-      ].join(',')) || item.querySelector([
-        '#solutions-title',
-        '#project-title',
-        '#team-title',
-        '#contact-title'
-      ].join(',')));
+      const containsMainTitle = Boolean(item.matches(mainTitleSelector) || item.querySelector(mainTitleSelector));
+      if (containsMainTitle) {
+        item.classList.add('visible');
+        gsap.set(item, { opacity: 1, x: 0, y: 0, transition: 'none' });
+        return;
+      }
+
       const isLargeBlock = item.matches([
         '.solution-coverflow',
         '.project-showcase',
-        '.person',
-        '.contact-panel'
+        '.person'
       ].join(','));
-      const initialY = containsMainTitle ? 112 : isLargeBlock ? 78 : 54;
-      const initialOpacity = containsMainTitle ? .08 : .16;
+      const initialY = isLargeBlock ? 78 : 54;
 
       item.classList.add('visible');
       gsap.fromTo(item, {
-        opacity: initialOpacity,
+        opacity: .16,
         y: initialY,
         force3D: true,
         transition: 'none',
@@ -229,40 +231,58 @@
     });
 
     const hero = document.querySelector('.hero');
-    const heroTitle = document.querySelector('#hero-title');
-    const heroSupportingItems = hero ? [
-      hero.querySelector('.eyebrow'),
-      hero.querySelector('.hero-copy'),
-      hero.querySelector('.hero-actions')
-    ].filter(Boolean) : [];
+    const splitTitleWords = title => {
+      const textNodes = [];
+      const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
+      }
 
-    if (hero && heroTitle) {
-      const heroFlow = gsap.timeline({
+      const words = [];
+      textNodes.forEach(textNode => {
+        const fragment = document.createDocumentFragment();
+        textNode.textContent.split(/(\s+)/).forEach(part => {
+          if (!part.trim()) {
+            fragment.append(document.createTextNode(part));
+            return;
+          }
+
+          const word = document.createElement('span');
+          word.className = 'scroll-title-word';
+          word.textContent = part;
+          word.style.display = 'inline-block';
+          word.style.color = 'inherit';
+          fragment.append(word);
+          words.push(word);
+        });
+        textNode.replaceWith(fragment);
+      });
+      return words;
+    };
+
+    document.querySelectorAll(mainTitleSelector).forEach(title => {
+      const words = splitTitleWords(title);
+      if (!words.length) return;
+
+      const isHeroTitle = title.id === 'hero-title';
+      gsap.fromTo(words, {
+        opacity: .15,
+        y: 20,
+        force3D: true,
+        willChange: 'transform, opacity'
+      }, {
+        opacity: 1,
+        y: 0,
+        ease: 'none',
         scrollTrigger: {
-          trigger: hero,
-          start: 'top top',
-          end: 'bottom 34%',
+          trigger: isHeroTitle ? hero : title,
+          start: isHeroTitle ? 'top top' : 'top 94%',
+          end: isHeroTitle ? '+=220' : 'top 62%',
           scrub: true,
           invalidateOnRefresh: true
         }
       });
-
-      heroFlow
-        .to(heroTitle, {
-          y: -96,
-          opacity: .5,
-          duration: 1,
-          ease: 'none',
-          force3D: true
-        }, 0)
-        .to(heroSupportingItems, {
-          y: -46,
-          opacity: .62,
-          duration: 1,
-          ease: 'none',
-          force3D: true
-        }, 0);
-    }
+    });
 
     const heroPreview = document.querySelector('.hero-login-preview');
     const heroLaptop = heroPreview?.querySelector('.hero-project-laptop');
