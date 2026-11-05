@@ -291,7 +291,7 @@
         scrollTrigger: {
           trigger: isHeroTitle ? hero : title,
           start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 94%',
-          end: isHeroTitle ? '+=300' : isContactTitle ? 'top 34%' : 'top 48%',
+          end: isHeroTitle ? '+=210' : isContactTitle ? 'top 34%' : 'top 48%',
           scrub: true,
           invalidateOnRefresh: true
         }
@@ -300,7 +300,7 @@
         y: 0,
         rotationX: 0,
         duration: 1,
-        stagger: isHeroTitle ? .28 : isContactTitle ? .34 : .48,
+        stagger: isHeroTitle ? .18 : isContactTitle ? .34 : .48,
         ease: 'none'
       });
     });
