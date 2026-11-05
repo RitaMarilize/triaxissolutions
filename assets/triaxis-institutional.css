@@ -60,7 +60,7 @@ main { position: relative; z-index: 1; overflow: visible; }
 .menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-5.5px) rotate(-45deg); }
 
-.hero { position: relative; min-height: 780px; display: grid; align-items: center; padding: calc(var(--header) + 70px) 0 78px; background: rgba(255,255,255,.76); border-bottom: 1px solid rgba(195,211,228,.62); isolation: isolate; }
+.hero { position: relative; min-height: 660px; display: grid; align-items: center; padding: var(--header) 0 60px; background: rgba(255,255,255,.76); border-bottom: 1px solid rgba(195,211,228,.62); isolation: isolate; }
 .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; pointer-events: none; border: 1px solid rgba(54,92,135,.09); transform: rotate(9deg); }
 .hero::before { width: 44vw; height: 36vw; right: -14vw; top: 12%; }
 .hero::after { width: 38vw; height: 30vw; right: -9vw; top: 23%; }
@@ -342,7 +342,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .site-header.menu-open .main-nav { transform: none; }
   .main-nav a { padding: 18px 8px; border-bottom: 1px solid var(--line); font-size: 1rem; }
   .main-nav a::after { display: none; }
-  .hero { min-height: auto; padding-top: calc(var(--header) + 84px); }
+  .hero { min-height: auto; padding-top: calc(var(--header) + 28px); }
   .hero-inner { grid-template-columns: 1fr; gap: 54px; }
   .hero-copy-column { max-width: 650px; }
   .hero h1 { font-size: clamp(3.15rem, 8.5vw, 5rem); }
@@ -365,7 +365,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   :root { --shell: min(100% - 28px, 520px); }
   main { overflow: clip; }
   .brand { width: 148px; height: 48px; }
-  .hero { min-height: auto; padding: calc(var(--header) + 62px) 0 72px; }
+  .hero { min-height: auto; padding: calc(var(--header) + 22px) 0 56px; }
   .hero-inner { gap: 42px; }
   .hero h1 { font-size: clamp(2.62rem, 12.6vw, 3.9rem); line-height: 1; letter-spacing: -.058em; }
   .hero h1 br { display: none; }
