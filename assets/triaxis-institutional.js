@@ -362,6 +362,45 @@
         }, '-=.04');
     }
 
+    const choreography = document.querySelector('[data-scroll-choreography]');
+    const mainScreen = choreography?.querySelector('[data-choreo-main]');
+    const stockScreen = choreography?.querySelector('[data-choreo-piece="stock"]');
+    const reportsScreen = choreography?.querySelector('[data-choreo-piece="reports"]');
+    const fleetScreen = choreography?.querySelector('[data-choreo-piece="fleet"]');
+
+    if (choreography && mainScreen && stockScreen && reportsScreen && fleetScreen) {
+      const choreographyMedia = gsap.matchMedia();
+      choreographyMedia.add('(min-width: 651px)', () => {
+        gsap.set(mainScreen, { opacity: .76, y: 34, force3D: true });
+        gsap.set(stockScreen, { opacity: .5, x: -82, y: -42, force3D: true });
+        gsap.set(reportsScreen, { opacity: .5, x: 86, y: -38, force3D: true });
+        gsap.set(fleetScreen, { opacity: .5, x: 76, y: 66, force3D: true });
+
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: choreography,
+            start: 'top 88%',
+            end: 'bottom 48%',
+            scrub: .7,
+            invalidateOnRefresh: true
+          }
+        });
+
+        timeline.to([mainScreen, stockScreen, reportsScreen, fleetScreen], {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 1,
+          ease: 'power2.out'
+        });
+
+        return () => {
+          timeline.scrollTrigger?.kill();
+          timeline.kill();
+        };
+      });
+    }
+
   };
 
   initScrollReveals();
