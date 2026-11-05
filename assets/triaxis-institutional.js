@@ -217,15 +217,22 @@
         duration,
         ease: isSolutionsTitle ? 'power3.out' : 'power2.out',
         overwrite: 'auto',
+        onStart: () => {
+          if (isSolutionsTitle) gsap.set(item, { willChange: 'transform, opacity' });
+        },
         scrollTrigger: {
           trigger: item,
           start: isSolutionsTitle ? 'top 92%' : 'top 88%',
-          once: true,
-          toggleActions: 'play none none none'
+          once: !isSolutionsTitle,
+          toggleActions: isSolutionsTitle ? 'restart none none reset' : 'play none none none'
         },
-        onComplete: () => gsap.set(item, {
-          clearProps: 'opacity,transform,transition,willChange'
-        })
+        onComplete: () => {
+          if (isSolutionsTitle) {
+            gsap.set(item, { willChange: 'auto' });
+            return;
+          }
+          gsap.set(item, { clearProps: 'opacity,transform,transition,willChange' });
+        }
       });
     });
 
