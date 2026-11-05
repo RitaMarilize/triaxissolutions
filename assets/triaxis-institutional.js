@@ -290,7 +290,7 @@
       gsap.timeline({
         scrollTrigger: {
           trigger: isHeroTitle ? hero : title,
-          start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 94%',
+          start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 82%',
           end: isHeroTitle ? '+=210' : isContactTitle ? 'top 34%' : 'top 48%',
           scrub: true,
           invalidateOnRefresh: true
