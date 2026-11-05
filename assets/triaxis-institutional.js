@@ -170,6 +170,7 @@
     const reduceMotion = motionSetting === 'off' || (
       motionSetting !== 'on' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     );
+    document.documentElement.classList.toggle('motion-disabled', reduceMotion || !gsap || !ScrollTrigger);
 
     if (reduceMotion || !gsap || !ScrollTrigger) {
       revealItems.forEach(item => item.classList.add('visible'));
@@ -367,32 +368,69 @@
     const stockScreen = choreography?.querySelector('[data-choreo-piece="stock"]');
     const reportsScreen = choreography?.querySelector('[data-choreo-piece="reports"]');
     const fleetScreen = choreography?.querySelector('[data-choreo-piece="fleet"]');
+    const choreographyTrack = choreography?.closest('.project-choreography-track');
 
-    if (choreography && mainScreen && stockScreen && reportsScreen && fleetScreen) {
+    if (choreography && choreographyTrack && mainScreen && stockScreen && reportsScreen && fleetScreen) {
       const choreographyMedia = gsap.matchMedia();
       choreographyMedia.add('(min-width: 651px)', () => {
-        gsap.set(mainScreen, { opacity: .88, y: 160, force3D: true });
-        gsap.set(stockScreen, { opacity: .72, x: 350, y: 210, force3D: true });
-        gsap.set(reportsScreen, { opacity: .72, x: -350, y: 190, force3D: true });
-        gsap.set(fleetScreen, { opacity: .72, x: -260, y: -190, force3D: true });
+        const centerX = element => choreography.clientWidth / 2 - (element.offsetLeft + element.offsetWidth / 2);
+        const centerY = element => choreography.clientHeight / 2 - (element.offsetTop + element.offsetHeight / 2);
+        const heroScale = () => Math.min(
+          choreography.clientWidth * .96 / mainScreen.offsetWidth,
+          choreography.clientHeight * .92 / mainScreen.offsetHeight
+        );
+
+        gsap.set([mainScreen, stockScreen, reportsScreen, fleetScreen], {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          force3D: true
+        });
 
         const timeline = gsap.timeline({
           scrollTrigger: {
-            trigger: choreography,
-            start: 'top 95%',
-            end: 'bottom 20%',
-            scrub: .95,
+            trigger: choreographyTrack,
+            start: () => `top top+=${(document.querySelector('.site-header')?.offsetHeight || 78) + 18}`,
+            end: 'bottom bottom',
+            scrub: 1,
             invalidateOnRefresh: true
           }
         });
 
-        timeline.to([mainScreen, stockScreen, reportsScreen, fleetScreen], {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 1,
-          ease: 'power2.inOut'
-        });
+        timeline
+          .to(stockScreen, {
+            y: () => reportsScreen.offsetTop - stockScreen.offsetTop,
+            duration: .25,
+            ease: 'power2.inOut'
+          }, 0)
+          .to(fleetScreen, {
+            y: () => mainScreen.offsetTop - fleetScreen.offsetTop,
+            duration: .25,
+            ease: 'power2.inOut'
+          }, 0)
+          .to([stockScreen, reportsScreen, fleetScreen], {
+            x: index => centerX([stockScreen, reportsScreen, fleetScreen][index]),
+            y: index => centerY([stockScreen, reportsScreen, fleetScreen][index]),
+            duration: .25,
+            ease: 'power2.inOut'
+          }, .4)
+          .to(mainScreen, {
+            x: () => centerX(mainScreen),
+            y: () => centerY(mainScreen),
+            duration: .25,
+            ease: 'power2.inOut'
+          }, .4)
+          .to([stockScreen, reportsScreen, fleetScreen], {
+            opacity: 0,
+            duration: .18,
+            ease: 'power1.out'
+          }, .82)
+          .to(mainScreen, {
+            scale: heroScale,
+            duration: .25,
+            ease: 'power2.inOut'
+          }, 1.2);
 
         return () => {
           timeline.scrollTrigger?.kill();
