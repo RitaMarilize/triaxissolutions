@@ -271,9 +271,14 @@
       if (!words.length) return;
 
       const isHeroTitle = title.id === 'hero-title';
+      const isContactTitle = title.id === 'contact-title';
+      if (isContactTitle) gsap.set(title, { perspective: 900 });
+
       gsap.set(words, {
-        opacity: .15,
-        y: 20,
+        opacity: isContactTitle ? .04 : .15,
+        y: isContactTitle ? 70 : 20,
+        rotationX: isContactTitle ? -16 : 0,
+        transformOrigin: '50% 100%',
         force3D: true,
         willChange: 'transform, opacity'
       });
@@ -281,16 +286,17 @@
       gsap.timeline({
         scrollTrigger: {
           trigger: isHeroTitle ? hero : title,
-          start: isHeroTitle ? 'top top' : 'top 94%',
-          end: isHeroTitle ? '+=300' : 'top 48%',
+          start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 94%',
+          end: isHeroTitle ? '+=300' : isContactTitle ? 'top 34%' : 'top 48%',
           scrub: true,
           invalidateOnRefresh: true
         }
       }).to(words, {
         opacity: 1,
         y: 0,
+        rotationX: 0,
         duration: 1,
-        stagger: isHeroTitle ? .28 : .48,
+        stagger: isHeroTitle ? .28 : isContactTitle ? .34 : .48,
         ease: 'none'
       });
     });
