@@ -371,17 +371,17 @@
     if (choreography && mainScreen && stockScreen && reportsScreen && fleetScreen) {
       const choreographyMedia = gsap.matchMedia();
       choreographyMedia.add('(min-width: 651px)', () => {
-        gsap.set(mainScreen, { opacity: .76, y: 34, force3D: true });
-        gsap.set(stockScreen, { opacity: .5, x: -82, y: -42, force3D: true });
-        gsap.set(reportsScreen, { opacity: .5, x: 86, y: -38, force3D: true });
-        gsap.set(fleetScreen, { opacity: .5, x: 76, y: 66, force3D: true });
+        gsap.set(mainScreen, { opacity: .88, y: 160, force3D: true });
+        gsap.set(stockScreen, { opacity: .72, x: 350, y: 210, force3D: true });
+        gsap.set(reportsScreen, { opacity: .72, x: -350, y: 190, force3D: true });
+        gsap.set(fleetScreen, { opacity: .72, x: -260, y: -190, force3D: true });
 
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: choreography,
-            start: 'top 88%',
-            end: 'bottom 48%',
-            scrub: .7,
+            start: 'top 95%',
+            end: 'bottom 20%',
+            scrub: .95,
             invalidateOnRefresh: true
           }
         });
@@ -391,7 +391,7 @@
           x: 0,
           y: 0,
           duration: 1,
-          ease: 'power2.out'
+          ease: 'power2.inOut'
         });
 
         return () => {
