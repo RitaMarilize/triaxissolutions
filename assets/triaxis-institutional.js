@@ -265,22 +265,27 @@
       if (!words.length) return;
 
       const isHeroTitle = title.id === 'hero-title';
-      gsap.fromTo(words, {
+      gsap.set(words, {
         opacity: .15,
         y: 20,
         force3D: true,
         willChange: 'transform, opacity'
-      }, {
-        opacity: 1,
-        y: 0,
-        ease: 'none',
+      });
+
+      gsap.timeline({
         scrollTrigger: {
           trigger: isHeroTitle ? hero : title,
           start: isHeroTitle ? 'top top' : 'top 94%',
-          end: isHeroTitle ? '+=220' : 'top 62%',
+          end: isHeroTitle ? '+=520' : 'top 48%',
           scrub: true,
           invalidateOnRefresh: true
         }
+      }).to(words, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: .48,
+        ease: 'none'
       });
     });
 
