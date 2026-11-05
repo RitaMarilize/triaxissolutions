@@ -382,32 +382,32 @@
 
         depthTimeline
           .fromTo(heroLaptop, {
-            rotationX: 5,
-            rotationY: -10,
+            rotationX: 3,
+            rotationY: -6,
             z: 0,
-            y: 26,
+            y: 14,
             force3D: true
           }, {
             rotationX: 0,
-            rotationY: 3,
-            z: 35,
-            y: -14,
+            rotationY: 1.5,
+            z: 8,
+            y: -7,
             duration: 1,
             ease: 'none'
           }, 0)
           .fromTo(heroPhone, {
-            rotationX: -5,
-            rotationY: 14,
+            rotationX: -3,
+            rotationY: 7,
             rotationZ: 1.5,
-            z: 70,
-            y: 34,
+            z: 8,
+            y: 14,
             force3D: true
           }, {
-            rotationX: 2,
-            rotationY: -5,
+            rotationX: 1,
+            rotationY: -2.5,
             rotationZ: 1.5,
-            z: 150,
-            y: -20,
+            z: 26,
+            y: -8,
             duration: 1,
             ease: 'none'
           }, 0);
