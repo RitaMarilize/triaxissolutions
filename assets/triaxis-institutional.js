@@ -4,6 +4,7 @@
   const menuToggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#main-navigation');
   const navLinks = [...document.querySelectorAll('.main-nav a')];
+  let syncSolutionMotion = null;
 
   const closeMenu = () => {
     header?.classList.remove('menu-open');
@@ -70,9 +71,12 @@
         card.style.transform = `translateX(calc(-50% + ${offset * pitch}px)) translateZ(${-cardWidth * .42 * ramp}px) rotateY(${-tilt}deg)`;
         card.style.opacity = String(Math.max(0, 1 - .12 * distance) * edge);
         card.style.zIndex = String(100 - Math.round(distance * 10));
+        card.dataset.coverflowOffset = String(offset);
         card.dataset.selected = String(index === selected && distance < .5);
         card.setAttribute('aria-current', index === selected ? 'true' : 'false');
       });
+
+      syncSolutionMotion?.();
     };
 
     const settle = next => {
@@ -307,49 +311,58 @@
     const solutionCardInners = [...document.querySelectorAll('.solution-card-inner')];
     if (solutionSection && solutionCoverflow && solutionCardMotions.length && solutionCardInners.length) {
       const desktopSolutions = window.matchMedia('(min-width: 1001px)').matches;
+      let solutionProgress = 0;
 
-      gsap.set(solutionCardMotions, {
-        xPercent: index => desktopSolutions ? [88, 0, -88][index] : 0,
-        y: index => desktopSolutions ? [54, 8, 54][index] : 24,
-        rotationZ: index => desktopSolutions ? [-16, 0, 16][index] : 0,
-        transformOrigin: '50% 50%',
-        force3D: true,
-        willChange: 'transform'
-      });
+      const clampProgress = value => Math.max(0, Math.min(1, value));
+      const renderSolutionMotion = () => {
+        const movementProgress = clampProgress(solutionProgress / .46);
 
-      gsap.set(solutionCardInners, {
-        rotationY: 180,
-        transformOrigin: '50% 50%',
-        force3D: true,
-        willChange: 'transform'
-      });
+        solutionCardMotions.forEach(motion => {
+          const card = motion.closest('.solution-card');
+          const offset = Number(card?.dataset.coverflowOffset || 0);
+          const side = Math.sign(offset);
+          const distance = Math.min(1, Math.abs(offset));
+          const remaining = 1 - movementProgress;
 
-      const solutionTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: solutionSection,
-          start: desktopSolutions ? 'top top' : 'top 90%',
-          end: desktopSolutions ? 'bottom bottom' : 'bottom 28%',
-          scrub: true,
-          invalidateOnRefresh: true
+          gsap.set(motion, {
+            xPercent: desktopSolutions ? -side * 88 * distance * remaining : 0,
+            y: (desktopSolutions ? 8 + 46 * distance : 24) * remaining,
+            rotationZ: desktopSolutions ? side * 16 * distance * remaining : 0,
+            transformOrigin: '50% 50%',
+            force3D: true,
+            willChange: 'transform'
+          });
+        });
+
+        solutionCardInners.forEach((inner, index) => {
+          const flipStart = .46 + index * .11;
+          const flipProgress = clampProgress((solutionProgress - flipStart) / .14);
+          gsap.set(inner, {
+            rotationY: 180 * (1 - flipProgress),
+            transformOrigin: '50% 50%',
+            force3D: true,
+            willChange: 'transform'
+          });
+        });
+      };
+
+      syncSolutionMotion = renderSolutionMotion;
+      ScrollTrigger.create({
+        trigger: solutionSection,
+        start: desktopSolutions ? 'top top' : 'top 90%',
+        end: desktopSolutions ? 'bottom bottom' : 'bottom 28%',
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: self => {
+          solutionProgress = self.progress;
+          renderSolutionMotion();
+        },
+        onRefresh: self => {
+          solutionProgress = self.progress;
+          renderSolutionMotion();
         }
       });
-
-      solutionTimeline.to(solutionCardMotions, {
-        xPercent: 0,
-        y: 0,
-        rotationZ: 0,
-        duration: .46,
-        ease: 'none'
-      }).to(solutionCardInners, {
-        rotationY: 0,
-        duration: .14,
-        stagger: .11,
-        ease: 'none'
-      }, .46).to(solutionCardInners, {
-        rotationY: 0,
-        duration: .18,
-        ease: 'none'
-      }, .82);
+      renderSolutionMotion();
     }
 
     const heroPreview = document.querySelector('.hero-login-preview');
