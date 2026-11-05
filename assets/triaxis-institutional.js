@@ -180,187 +180,88 @@
     gsap.registerPlugin(ScrollTrigger);
 
     revealItems.forEach(item => {
-      if (item.matches('.project-showcase, #hero-title')) return;
+      if (item.closest('.hero')) {
+        item.classList.add('visible');
+        gsap.set(item, { opacity: 1, x: 0, y: 0, transition: 'none' });
+        return;
+      }
 
-      const isFeaturedCard = item.matches([
-        '.hero-dashboard-wrap',
-        '.solution-coverflow',
-        '.project-showcase',
-        '.person'
-      ].join(','));
-      const isCard = isFeaturedCard || item.matches('.contact-form');
-      const isMainTitle = item.matches([
-        '#hero-title',
+      const containsMainTitle = Boolean(item.matches([
         '#solutions-title',
         '#project-title',
         '#team-title',
         '#contact-title'
+      ].join(',')) || item.querySelector([
+        '#solutions-title',
+        '#project-title',
+        '#team-title',
+        '#contact-title'
+      ].join(',')));
+      const isLargeBlock = item.matches([
+        '.solution-coverflow',
+        '.project-showcase',
+        '.person',
+        '.contact-panel'
       ].join(','));
-      const isSolutionsTitle = Boolean(item.matches('#solutions-title') || item.querySelector('#solutions-title'));
-      const isContactPanel = item.matches('.contact-panel');
-      const initialY = isSolutionsTitle ? 108 : isContactPanel ? 28 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
-      const initialX = isSolutionsTitle ? -38 : 0;
-      const duration = isSolutionsTitle ? 1.15 : isContactPanel ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const initialY = containsMainTitle ? 112 : isLargeBlock ? 78 : 54;
+      const initialOpacity = containsMainTitle ? .08 : .16;
 
-      gsap.set(item, {
-        opacity: 0,
-        x: initialX,
+      item.classList.add('visible');
+      gsap.fromTo(item, {
+        opacity: initialOpacity,
         y: initialY,
         force3D: true,
         transition: 'none',
         willChange: 'transform, opacity'
-      });
-      item.classList.add('visible');
-
-      gsap.to(item, {
+      }, {
         opacity: 1,
-        x: 0,
         y: 0,
-        duration,
-        ease: isSolutionsTitle ? 'power3.out' : isContactPanel ? 'power3.out' : 'power2.out',
+        ease: 'none',
         overwrite: 'auto',
-        onStart: () => {
-          if (isSolutionsTitle) gsap.set(item, { willChange: 'transform, opacity' });
-        },
         scrollTrigger: {
           trigger: item,
-          start: isSolutionsTitle ? 'top 90%' : isContactPanel ? 'top 90%' : 'top 88%',
-          once: !isSolutionsTitle,
-          toggleActions: isSolutionsTitle ? 'restart none none reset' : 'play none none none'
-        },
-        onComplete: () => {
-          if (isSolutionsTitle) {
-            gsap.set(item, { willChange: 'auto' });
-            return;
-          }
-          gsap.set(item, { clearProps: 'opacity,transform,transition,willChange' });
+          start: 'top 96%',
+          end: 'top 58%',
+          scrub: true,
+          invalidateOnRefresh: true
         }
       });
     });
 
+    const hero = document.querySelector('.hero');
     const heroTitle = document.querySelector('#hero-title');
-
-    if (heroTitle) {
-      const titleLabel = heroTitle.textContent.replace(/\s+/g, ' ').trim();
-      heroTitle.setAttribute('aria-label', titleLabel);
-      const textNodes = [];
-      const walker = document.createTreeWalker(heroTitle, NodeFilter.SHOW_TEXT);
-      while (walker.nextNode()) {
-        if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
-      }
-
-      const words = [];
-      const letters = [];
-      textNodes.forEach(textNode => {
-        const fragment = document.createDocumentFragment();
-        textNode.textContent.split(/(\s+)/).forEach(part => {
-          if (!part.trim()) {
-            fragment.append(part);
-            return;
-          }
-          const word = document.createElement('span');
-          word.style.display = 'inline-block';
-          word.style.color = 'inherit';
-          [...part].forEach(character => {
-            const letter = document.createElement('span');
-            letter.textContent = character;
-            letter.style.display = 'inline-block';
-            letter.style.color = 'inherit';
-            word.append(letter);
-            letters.push(letter);
-          });
-          fragment.append(word);
-          words.push(word);
-        });
-        textNode.replaceWith(fragment);
-      });
-
-      heroTitle.classList.add('visible');
-      gsap.set(letters, {
-        opacity: 0,
-        y: -160,
-        rotation: index => index % 2 ? -3 : 3,
-        transformOrigin: '50% 100%',
-        force3D: true,
-        willChange: 'transform, opacity'
-      });
-
-      gsap.to(letters, {
-        opacity: 1,
-        y: 0,
-        rotation: 0,
-        duration: .72,
-        stagger: .025,
-        ease: 'power3.in',
-        scrollTrigger: {
-          trigger: heroTitle,
-          start: 'top 95%',
-          once: true,
-          toggleActions: 'play none none none'
-        },
-        onComplete: () => {
-          words.forEach(word => word.replaceWith(document.createTextNode(word.textContent)));
-          heroTitle.normalize();
-          heroTitle.removeAttribute('aria-label');
-        }
-      });
-    }
-
-    const projectShowcase = document.querySelector('.project-showcase');
-    const projectMedia = projectShowcase?.querySelector('.project-media');
-    const projectTextItems = projectShowcase ? [
-      projectShowcase.querySelector('.project-category'),
-      projectShowcase.querySelector('.project-copy h3'),
-      projectShowcase.querySelector('.project-description'),
-      ...projectShowcase.querySelectorAll('.project-benefits li'),
-      projectShowcase.querySelector('.project-link')
+    const heroSupportingItems = hero ? [
+      hero.querySelector('.eyebrow'),
+      hero.querySelector('.hero-copy'),
+      hero.querySelector('.hero-actions')
     ].filter(Boolean) : [];
 
-    if (projectShowcase && projectMedia && projectTextItems.length) {
-      gsap.set(projectShowcase, {
-        opacity: 1,
-        y: 0,
-        transition: 'none'
-      });
-      projectShowcase.classList.add('visible');
-
-      gsap.set(projectMedia, {
-        opacity: 0,
-        y: 70,
-        force3D: true,
-        willChange: 'transform, opacity'
-      });
-      gsap.set(projectTextItems, {
-        opacity: 0,
-        y: 48,
-        force3D: true,
-        willChange: 'transform, opacity'
-      });
-
-      gsap.timeline({
+    if (hero && heroTitle) {
+      const heroFlow = gsap.timeline({
         scrollTrigger: {
-          trigger: projectShowcase,
-          start: 'top 82%',
-          once: true,
-          toggleActions: 'play none none none'
-        },
-        onComplete: () => gsap.set([projectShowcase, projectMedia, ...projectTextItems], {
-          clearProps: 'opacity,transform,transition,willChange'
-        })
-      })
-        .to(projectMedia, {
-          opacity: 1,
-          y: 0,
-          duration: .42,
-          ease: 'power4.out'
-        })
-        .to(projectTextItems, {
-          opacity: 1,
-          y: 0,
-          duration: .36,
-          stagger: .075,
-          ease: 'power4.out'
-        }, '-=.04');
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom 34%',
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
+
+      heroFlow
+        .to(heroTitle, {
+          y: -96,
+          opacity: .5,
+          duration: 1,
+          ease: 'none',
+          force3D: true
+        }, 0)
+        .to(heroSupportingItems, {
+          y: -46,
+          opacity: .62,
+          duration: 1,
+          ease: 'none',
+          force3D: true
+        }, 0);
     }
 
     const heroPreview = document.querySelector('.hero-login-preview');
