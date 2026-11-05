@@ -196,9 +196,10 @@
         '#contact-title'
       ].join(','));
       const isSolutionsTitle = item.matches('#solutions-title');
-      const initialY = isSolutionsTitle ? 78 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const isContactPanel = item.matches('.contact-panel');
+      const initialY = isSolutionsTitle ? 78 : isContactPanel ? 28 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
       const initialX = isSolutionsTitle ? -26 : 0;
-      const duration = isSolutionsTitle ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const duration = isSolutionsTitle || isContactPanel ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
@@ -215,14 +216,14 @@
         x: 0,
         y: 0,
         duration,
-        ease: isSolutionsTitle ? 'power3.out' : 'power2.out',
+        ease: isSolutionsTitle || isContactPanel ? 'power3.out' : 'power2.out',
         overwrite: 'auto',
         onStart: () => {
           if (isSolutionsTitle) gsap.set(item, { willChange: 'transform, opacity' });
         },
         scrollTrigger: {
           trigger: item,
-          start: isSolutionsTitle ? 'top 92%' : 'top 88%',
+          start: isSolutionsTitle ? 'top 92%' : isContactPanel ? 'top 90%' : 'top 88%',
           once: !isSolutionsTitle,
           toggleActions: isSolutionsTitle ? 'restart none none reset' : 'play none none none'
         },
@@ -361,70 +362,6 @@
         }, '-=.04');
     }
 
-    const contactTitle = document.querySelector('#contact-title');
-    const contactCopy = contactTitle?.closest('.contact-copy');
-
-    if (contactTitle && contactCopy) {
-      const textNodes = [];
-      const walker = document.createTreeWalker(contactTitle, NodeFilter.SHOW_TEXT);
-      while (walker.nextNode()) {
-        if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
-      }
-
-      const words = [];
-      const letters = [];
-      textNodes.forEach(textNode => {
-        const fragment = document.createDocumentFragment();
-        textNode.textContent.split(/(\s+)/).forEach(part => {
-          if (!part.trim()) {
-            fragment.append(part);
-            return;
-          }
-          const word = document.createElement('span');
-          word.style.display = 'inline-block';
-          word.style.color = 'inherit';
-          [...part].forEach(character => {
-            const letter = document.createElement('span');
-            letter.textContent = character;
-            letter.style.display = 'inline-block';
-            letter.style.color = 'inherit';
-            word.append(letter);
-            letters.push(letter);
-          });
-          fragment.append(word);
-          words.push(word);
-        });
-        textNode.replaceWith(fragment);
-      });
-
-      gsap.set(letters, {
-        opacity: 0,
-        y: -120,
-        rotation: index => index % 2 ? -2 : 2,
-        transformOrigin: '50% 100%',
-        force3D: true,
-        willChange: 'transform, opacity'
-      });
-
-      gsap.to(letters, {
-        opacity: 1,
-        y: 0,
-        rotation: 0,
-        duration: .5,
-        stagger: .018,
-        ease: 'power3.in',
-        scrollTrigger: {
-          trigger: contactCopy,
-          start: 'top 88%',
-          once: true,
-          toggleActions: 'play none none none'
-        },
-        onComplete: () => {
-          words.forEach(word => word.replaceWith(document.createTextNode(word.textContent)));
-          contactTitle.normalize();
-        }
-      });
-    }
   };
 
   initScrollReveals();
