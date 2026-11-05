@@ -179,7 +179,7 @@
     gsap.registerPlugin(ScrollTrigger);
 
     revealItems.forEach(item => {
-      if (item.matches('.project-showcase')) return;
+      if (item.matches('.project-showcase, #hero-title')) return;
 
       const isFeaturedCard = item.matches([
         '.hero-dashboard-wrap',
@@ -195,14 +195,12 @@
         '#team-title',
         '#contact-title'
       ].join(','));
-      const isHeroTitle = item.matches('#hero-title');
-      const initialY = isHeroTitle ? 120 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
-      const initialX = isHeroTitle ? -44 : 0;
-      const duration = isHeroTitle ? 1.2 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const initialY = isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const duration = isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
-        x: initialX,
+        x: 0,
         y: initialY,
         force3D: true,
         transition: 'none',
@@ -215,7 +213,7 @@
         x: 0,
         y: 0,
         duration,
-        ease: isHeroTitle ? 'power3.inOut' : 'power2.out',
+        ease: 'power2.out',
         overwrite: 'auto',
         scrollTrigger: {
           trigger: item,
@@ -228,6 +226,74 @@
         })
       });
     });
+
+    const heroTitle = document.querySelector('#hero-title');
+
+    if (heroTitle) {
+      const titleLabel = heroTitle.textContent.replace(/\s+/g, ' ').trim();
+      heroTitle.setAttribute('aria-label', titleLabel);
+      const textNodes = [];
+      const walker = document.createTreeWalker(heroTitle, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
+      }
+
+      const words = [];
+      const letters = [];
+      textNodes.forEach(textNode => {
+        const fragment = document.createDocumentFragment();
+        textNode.textContent.split(/(\s+)/).forEach(part => {
+          if (!part.trim()) {
+            fragment.append(part);
+            return;
+          }
+          const word = document.createElement('span');
+          word.style.display = 'inline-block';
+          word.style.color = 'inherit';
+          [...part].forEach(character => {
+            const letter = document.createElement('span');
+            letter.textContent = character;
+            letter.style.display = 'inline-block';
+            letter.style.color = 'inherit';
+            word.append(letter);
+            letters.push(letter);
+          });
+          fragment.append(word);
+          words.push(word);
+        });
+        textNode.replaceWith(fragment);
+      });
+
+      heroTitle.classList.add('visible');
+      gsap.set(letters, {
+        opacity: 0,
+        y: -160,
+        rotation: index => index % 2 ? -3 : 3,
+        transformOrigin: '50% 100%',
+        force3D: true,
+        willChange: 'transform, opacity'
+      });
+
+      gsap.to(letters, {
+        opacity: 1,
+        y: 0,
+        rotation: 0,
+        duration: .72,
+        stagger: .025,
+        ease: 'power3.in',
+        scrollTrigger: {
+          trigger: heroTitle,
+          start: 'top 95%',
+          once: true,
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          words.forEach(word => word.replaceWith(document.createTextNode(word.textContent)));
+          heroTitle.normalize();
+          heroTitle.removeAttribute('aria-label');
+        }
+      });
+    }
 
     const projectShowcase = document.querySelector('.project-showcase');
     const projectMedia = projectShowcase?.querySelector('.project-media');
