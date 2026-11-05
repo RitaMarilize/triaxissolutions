@@ -179,9 +179,26 @@
     gsap.registerPlugin(ScrollTrigger);
 
     revealItems.forEach(item => {
+      const isCard = item.matches([
+        '.hero-dashboard-wrap',
+        '.solution-coverflow',
+        '.project-showcase',
+        '.person',
+        '.contact-form'
+      ].join(','));
+      const isMainTitle = item.matches([
+        '#hero-title',
+        '#solutions-title',
+        '#project-title',
+        '#team-title',
+        '#contact-title'
+      ].join(','));
+      const initialY = isCard ? 36 : isMainTitle ? 30 : 20;
+      const duration = isMainTitle ? .65 : .85;
+
       gsap.set(item, {
         opacity: 0,
-        y: 20,
+        y: initialY,
         force3D: true,
         transition: 'none',
         willChange: 'transform, opacity'
@@ -191,7 +208,7 @@
       gsap.to(item, {
         opacity: 1,
         y: 0,
-        duration: .85,
+        duration,
         ease: 'power2.out',
         overwrite: 'auto',
         scrollTrigger: {
