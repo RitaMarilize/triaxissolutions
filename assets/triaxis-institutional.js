@@ -195,11 +195,14 @@
         '#team-title',
         '#contact-title'
       ].join(','));
-      const initialY = isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
-      const duration = isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const isHeroTitle = item.matches('#hero-title');
+      const initialY = isHeroTitle ? 72 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const initialX = isHeroTitle ? -26 : 0;
+      const duration = isHeroTitle ? .78 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
+        x: initialX,
         y: initialY,
         force3D: true,
         transition: 'none',
@@ -209,9 +212,10 @@
 
       gsap.to(item, {
         opacity: 1,
+        x: 0,
         y: 0,
         duration,
-        ease: 'power2.out',
+        ease: isHeroTitle ? 'power3.out' : 'power2.out',
         overwrite: 'auto',
         scrollTrigger: {
           trigger: item,
