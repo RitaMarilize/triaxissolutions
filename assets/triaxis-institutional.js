@@ -249,13 +249,13 @@
 
       gsap.set(projectMedia, {
         opacity: 0,
-        y: 28,
+        y: 70,
         force3D: true,
         willChange: 'transform, opacity'
       });
       gsap.set(projectTextItems, {
         opacity: 0,
-        y: 24,
+        y: 48,
         force3D: true,
         willChange: 'transform, opacity'
       });
@@ -274,16 +274,16 @@
         .to(projectMedia, {
           opacity: 1,
           y: 0,
-          duration: .9,
-          ease: 'power2.out'
+          duration: .42,
+          ease: 'power4.out'
         })
         .to(projectTextItems, {
           opacity: 1,
           y: 0,
-          duration: .72,
-          stagger: .11,
-          ease: 'power2.out'
-        }, '-=.34');
+          duration: .36,
+          stagger: .075,
+          ease: 'power4.out'
+        }, '-=.04');
     }
 
     const contactTitle = document.querySelector('#contact-title');
