@@ -179,6 +179,8 @@
     gsap.registerPlugin(ScrollTrigger);
 
     revealItems.forEach(item => {
+      if (item.matches('.project-showcase')) return;
+
       const isFeaturedCard = item.matches([
         '.hero-dashboard-wrap',
         '.solution-coverflow',
@@ -222,6 +224,63 @@
         })
       });
     });
+
+    const projectShowcase = document.querySelector('.project-showcase');
+    const projectMedia = projectShowcase?.querySelector('.project-media');
+    const projectTextItems = projectShowcase ? [
+      projectShowcase.querySelector('.project-category'),
+      projectShowcase.querySelector('.project-copy h3'),
+      projectShowcase.querySelector('.project-description'),
+      ...projectShowcase.querySelectorAll('.project-benefits li'),
+      projectShowcase.querySelector('.project-link')
+    ].filter(Boolean) : [];
+
+    if (projectShowcase && projectMedia && projectTextItems.length) {
+      gsap.set(projectShowcase, {
+        opacity: 1,
+        y: 0,
+        transition: 'none'
+      });
+      projectShowcase.classList.add('visible');
+
+      gsap.set(projectMedia, {
+        opacity: 0,
+        y: 28,
+        force3D: true,
+        willChange: 'transform, opacity'
+      });
+      gsap.set(projectTextItems, {
+        opacity: 0,
+        y: 24,
+        force3D: true,
+        willChange: 'transform, opacity'
+      });
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: projectShowcase,
+          start: 'top 82%',
+          once: true,
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => gsap.set([projectShowcase, projectMedia, ...projectTextItems], {
+          clearProps: 'opacity,transform,transition,willChange'
+        })
+      })
+        .to(projectMedia, {
+          opacity: 1,
+          y: 0,
+          duration: .9,
+          ease: 'power2.out'
+        })
+        .to(projectTextItems, {
+          opacity: 1,
+          y: 0,
+          duration: .72,
+          stagger: .11,
+          ease: 'power2.out'
+        }, '-=.34');
+    }
   };
 
   initScrollReveals();
