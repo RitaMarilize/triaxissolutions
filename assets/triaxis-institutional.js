@@ -285,6 +285,63 @@
           ease: 'power2.out'
         }, '-=.34');
     }
+
+    const contactTitle = document.querySelector('#contact-title');
+    const contactCopy = contactTitle?.closest('.contact-copy');
+
+    if (contactTitle && contactCopy) {
+      const textNodes = [];
+      const walker = document.createTreeWalker(contactTitle, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
+      }
+
+      const words = [];
+      textNodes.forEach(textNode => {
+        const fragment = document.createDocumentFragment();
+        textNode.textContent.split(/(\s+)/).forEach(part => {
+          if (!part.trim()) {
+            fragment.append(part);
+            return;
+          }
+          const word = document.createElement('span');
+          word.textContent = part;
+          word.style.display = 'inline-block';
+          word.style.color = 'inherit';
+          fragment.append(word);
+          words.push(word);
+        });
+        textNode.replaceWith(fragment);
+      });
+
+      gsap.set(words, {
+        opacity: 0,
+        y: -120,
+        rotation: index => index % 2 ? -2 : 2,
+        transformOrigin: '50% 100%',
+        force3D: true,
+        willChange: 'transform, opacity'
+      });
+
+      gsap.to(words, {
+        opacity: 1,
+        y: 0,
+        rotation: 0,
+        duration: .58,
+        stagger: .055,
+        ease: 'power3.in',
+        scrollTrigger: {
+          trigger: contactCopy,
+          start: 'top 88%',
+          once: true,
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          words.forEach(word => word.replaceWith(document.createTextNode(word.textContent)));
+          contactTitle.normalize();
+        }
+      });
+    }
   };
 
   initScrollReveals();
