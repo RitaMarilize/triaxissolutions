@@ -196,11 +196,11 @@
         '#team-title',
         '#contact-title'
       ].join(','));
-      const isSolutionsTitle = item.matches('#solutions-title');
+      const isSolutionsTitle = Boolean(item.matches('#solutions-title') || item.querySelector('#solutions-title'));
       const isContactPanel = item.matches('.contact-panel');
-      const initialY = isSolutionsTitle ? 78 : isContactPanel ? 28 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
-      const initialX = isSolutionsTitle ? -26 : 0;
-      const duration = isSolutionsTitle || isContactPanel ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
+      const initialY = isSolutionsTitle ? 108 : isContactPanel ? 28 : isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const initialX = isSolutionsTitle ? -38 : 0;
+      const duration = isSolutionsTitle ? 1.15 : isContactPanel ? .9 : isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
@@ -217,14 +217,14 @@
         x: 0,
         y: 0,
         duration,
-        ease: isSolutionsTitle || isContactPanel ? 'power3.out' : 'power2.out',
+        ease: isSolutionsTitle ? 'power3.out' : isContactPanel ? 'power3.out' : 'power2.out',
         overwrite: 'auto',
         onStart: () => {
           if (isSolutionsTitle) gsap.set(item, { willChange: 'transform, opacity' });
         },
         scrollTrigger: {
           trigger: item,
-          start: isSolutionsTitle ? 'top 92%' : isContactPanel ? 'top 90%' : 'top 88%',
+          start: isSolutionsTitle ? 'top 90%' : isContactPanel ? 'top 90%' : 'top 88%',
           once: !isSolutionsTitle,
           toggleActions: isSolutionsTitle ? 'restart none none reset' : 'play none none none'
         },
