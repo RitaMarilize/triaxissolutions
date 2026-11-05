@@ -297,6 +297,7 @@
       }
 
       const words = [];
+      const letters = [];
       textNodes.forEach(textNode => {
         const fragment = document.createDocumentFragment();
         textNode.textContent.split(/(\s+)/).forEach(part => {
@@ -305,16 +306,23 @@
             return;
           }
           const word = document.createElement('span');
-          word.textContent = part;
           word.style.display = 'inline-block';
           word.style.color = 'inherit';
+          [...part].forEach(character => {
+            const letter = document.createElement('span');
+            letter.textContent = character;
+            letter.style.display = 'inline-block';
+            letter.style.color = 'inherit';
+            word.append(letter);
+            letters.push(letter);
+          });
           fragment.append(word);
           words.push(word);
         });
         textNode.replaceWith(fragment);
       });
 
-      gsap.set(words, {
+      gsap.set(letters, {
         opacity: 0,
         y: -120,
         rotation: index => index % 2 ? -2 : 2,
@@ -323,12 +331,12 @@
         willChange: 'transform, opacity'
       });
 
-      gsap.to(words, {
+      gsap.to(letters, {
         opacity: 1,
         y: 0,
         rotation: 0,
-        duration: .58,
-        stagger: .055,
+        duration: .5,
+        stagger: .018,
         ease: 'power3.in',
         scrollTrigger: {
           trigger: contactCopy,
