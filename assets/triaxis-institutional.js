@@ -179,13 +179,13 @@
     gsap.registerPlugin(ScrollTrigger);
 
     revealItems.forEach(item => {
-      const isCard = item.matches([
+      const isFeaturedCard = item.matches([
         '.hero-dashboard-wrap',
         '.solution-coverflow',
         '.project-showcase',
-        '.person',
-        '.contact-form'
+        '.person'
       ].join(','));
+      const isCard = isFeaturedCard || item.matches('.contact-form');
       const isMainTitle = item.matches([
         '#hero-title',
         '#solutions-title',
@@ -193,8 +193,8 @@
         '#team-title',
         '#contact-title'
       ].join(','));
-      const initialY = isCard ? 36 : isMainTitle ? 30 : 20;
-      const duration = isMainTitle ? .65 : .85;
+      const initialY = isFeaturedCard ? 64 : isCard ? 36 : isMainTitle ? 30 : 20;
+      const duration = isFeaturedCard ? .95 : isMainTitle ? .65 : .85;
 
       gsap.set(item, {
         opacity: 0,
