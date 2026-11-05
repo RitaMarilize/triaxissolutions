@@ -290,59 +290,30 @@
     });
 
     const heroPreview = document.querySelector('.hero-login-preview');
-    const heroLaptop = heroPreview?.querySelector('.hero-project-laptop');
-    const heroPhone = heroPreview?.querySelector('.hero-project-phone');
-
-    if (heroPreview && heroLaptop && heroPhone) {
-      const heroDepthMedia = gsap.matchMedia();
-      heroDepthMedia.add('(min-width: 651px)', () => {
-        const depthTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-            invalidateOnRefresh: true
-          }
-        });
-
-        depthTimeline
-          .fromTo(heroLaptop, {
-            rotationX: 3,
-            rotationY: -6,
-            z: 0,
-            y: 14,
-            force3D: true
-          }, {
-            rotationX: 0,
-            rotationY: 1.5,
-            z: 8,
-            y: -7,
-            duration: 1,
-            ease: 'none'
-          }, 0)
-          .fromTo(heroPhone, {
-            rotationX: -3,
-            rotationY: 7,
-            rotationZ: 1.5,
-            z: 8,
-            y: 14,
-            force3D: true
-          }, {
-            rotationX: 1,
-            rotationY: -2.5,
-            rotationZ: 1.5,
-            z: 26,
-            y: -8,
-            duration: 1,
-            ease: 'none'
-          }, 0);
-
-        return () => {
-          depthTimeline.scrollTrigger?.kill();
-          depthTimeline.kill();
-          gsap.set([heroLaptop, heroPhone], { clearProps: 'transform' });
-        };
+    if (heroPreview) {
+      gsap.fromTo(heroPreview, {
+        opacity: .42,
+        y: () => window.innerWidth <= 650 ? 46 : 82,
+        rotationX: () => window.innerWidth <= 650 ? 2.5 : 6,
+        rotationY: () => window.innerWidth <= 650 ? -2 : -5,
+        rotationZ: () => window.innerWidth <= 650 ? -.8 : -1.8,
+        transformOrigin: '50% 60%',
+        force3D: true,
+        willChange: 'transform, opacity'
+      }, {
+        opacity: 1,
+        y: () => window.innerWidth <= 650 ? 0 : -22,
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: '+=520',
+          scrub: true,
+          invalidateOnRefresh: true
+        }
       });
     }
 
