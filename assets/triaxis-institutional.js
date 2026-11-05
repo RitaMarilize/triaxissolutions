@@ -289,6 +289,34 @@
       });
     });
 
+    const solutionCoverflow = document.querySelector('[data-solution-coverflow]');
+    const solutionCardInners = [...document.querySelectorAll('.solution-card-inner')];
+    if (solutionCoverflow && solutionCardInners.length) {
+      gsap.set(solutionCardInners, {
+        rotationY: 180,
+        rotationZ: index => index % 2 ? 1.4 : -1.4,
+        transformOrigin: '50% 50%',
+        force3D: true,
+        willChange: 'transform'
+      });
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: solutionCoverflow,
+          start: 'top 94%',
+          end: 'top 42%',
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      }).to(solutionCardInners, {
+        rotationY: 0,
+        rotationZ: 0,
+        duration: 1,
+        stagger: .55,
+        ease: 'none'
+      });
+    }
+
     const heroPreview = document.querySelector('.hero-login-preview');
     if (heroPreview) {
       gsap.fromTo(heroPreview, {
