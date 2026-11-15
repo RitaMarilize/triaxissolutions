@@ -286,9 +286,8 @@
     });
 
     const hero = document.querySelector('.hero');
-    const heroScrollStart = () => `top top+=${document.querySelector('.site-header')?.offsetHeight || 78}`;
-    const heroTitleDistance = () => `+=${window.innerWidth <= 650 ? 170 : 220}`;
-    const heroPreviewDistance = () => `+=${window.innerWidth <= 650 ? 220 : 300}`;
+    const heroTitleDistance = () => `+=${window.innerWidth <= 650 ? 300 : 360}`;
+    const heroPreviewDistance = () => `+=${window.innerWidth <= 650 ? 350 : 420}`;
     const splitTitleWords = title => {
       const textNodes = [];
       const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
@@ -327,8 +326,8 @@
       if (isContactTitle) gsap.set(title, { perspective: 900 });
 
       gsap.set(words, {
-        opacity: isContactTitle ? .04 : isHeroTitle ? .22 : .15,
-        y: isContactTitle ? 70 : isHeroTitle ? 16 : 20,
+        opacity: isContactTitle ? .04 : isHeroTitle ? .14 : .15,
+        y: isContactTitle ? 70 : isHeroTitle ? 26 : 20,
         rotationX: isContactTitle ? -16 : 0,
         transformOrigin: '50% 100%',
         force3D: true,
@@ -338,9 +337,9 @@
       gsap.timeline({
         scrollTrigger: {
           trigger: isHeroTitle ? hero : title,
-          start: isHeroTitle ? heroScrollStart : isContactTitle ? 'top 92%' : 'top 82%',
+          start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 82%',
           end: isHeroTitle ? heroTitleDistance : isContactTitle ? 'top 34%' : 'top 48%',
-          scrub: true,
+          scrub: isHeroTitle ? .55 : true,
           invalidateOnRefresh: true
         }
       }).to(words, {
@@ -348,7 +347,7 @@
         y: 0,
         rotationX: 0,
         duration: 1,
-        stagger: isHeroTitle ? .12 : isContactTitle ? .34 : .48,
+        stagger: isHeroTitle ? .16 : isContactTitle ? .34 : .48,
         ease: 'none'
       });
     });
@@ -425,7 +424,7 @@
     const heroPreview = document.querySelector('.hero-login-preview');
     if (heroPreview) {
       gsap.fromTo(heroPreview, {
-        opacity: .42,
+        opacity: .52,
         y: () => window.innerWidth <= 650 ? 46 : 82,
         rotationX: () => window.innerWidth <= 650 ? 2.5 : 6,
         rotationY: () => window.innerWidth <= 650 ? -2 : -5,
@@ -442,9 +441,9 @@
         ease: 'none',
         scrollTrigger: {
           trigger: hero,
-          start: heroScrollStart,
+          start: 'top top',
           end: heroPreviewDistance,
-          scrub: true,
+          scrub: .65,
           invalidateOnRefresh: true
         }
       });
