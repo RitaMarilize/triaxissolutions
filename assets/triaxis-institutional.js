@@ -7,6 +7,7 @@
   const scrollProgress = document.querySelector('.scroll-progress');
   const scrollProgressBar = scrollProgress?.querySelector('span');
   let syncSolutionMotion = null;
+  let setSolutionRendering = () => {};
 
   const closeMenu = () => {
     header?.classList.remove('menu-open');
@@ -66,6 +67,8 @@
     let animationFrame = null;
     let drag = null;
 
+    setSolutionRendering = active => coverflow.classList.toggle('is-transforming', active);
+
     const selectedIndex = value => ((Math.round(value) % count) + count) % count;
 
     const paint = () => {
@@ -97,10 +100,12 @@
     const settle = next => {
       if (animationFrame !== null) cancelAnimationFrame(animationFrame);
       target = next;
+      setSolutionRendering(true);
 
       if (reducedMotion) {
         position = target;
         paint();
+        setSolutionRendering(false);
         return;
       }
 
@@ -110,6 +115,7 @@
           position = target;
           paint();
           animationFrame = null;
+          setSolutionRendering(false);
           return;
         }
         position += remaining * .16;
@@ -127,6 +133,7 @@
       animationFrame = null;
       coverflow.setPointerCapture(event.pointerId);
       target = position;
+      setSolutionRendering(true);
       drag = { id: event.pointerId, x: event.clientX, start: position, velocity: 0, time: performance.now(), moved: false };
     });
 
@@ -350,6 +357,13 @@
     if (solutionSection && solutionCoverflow && solutionCardMotions.length && solutionCardInners.length) {
       const desktopSolutions = window.matchMedia('(min-width: 1001px)').matches;
       let solutionProgress = 0;
+      let solutionRenderTimer = null;
+
+      const markSolutionRendering = () => {
+        setSolutionRendering(true);
+        window.clearTimeout(solutionRenderTimer);
+        solutionRenderTimer = window.setTimeout(() => setSolutionRendering(false), 140);
+      };
 
       const clampProgress = value => Math.max(0, Math.min(1, value));
       const renderSolutionMotion = () => {
@@ -367,8 +381,7 @@
             y: (desktopSolutions ? 8 + 46 * distance : 24) * remaining,
             rotationZ: desktopSolutions ? side * 16 * distance * remaining : 0,
             transformOrigin: '50% 50%',
-            force3D: true,
-            willChange: 'transform'
+            force3D: 'auto'
           });
         });
 
@@ -378,8 +391,7 @@
           gsap.set(inner, {
             rotationY: 180 * (1 - flipProgress),
             transformOrigin: '50% 50%',
-            force3D: true,
-            willChange: 'transform'
+            force3D: 'auto'
           });
         });
       };
@@ -392,9 +404,13 @@
         scrub: true,
         invalidateOnRefresh: true,
         onUpdate: self => {
+          markSolutionRendering();
           solutionProgress = self.progress;
           renderSolutionMotion();
         },
+        onScrubComplete: () => setSolutionRendering(false),
+        onLeave: () => setSolutionRendering(false),
+        onLeaveBack: () => setSolutionRendering(false),
         onRefresh: self => {
           solutionProgress = self.progress;
           renderSolutionMotion();
@@ -441,6 +457,8 @@
     if (choreography && choreographyTrack && mainScreen && stockScreen && reportsScreen && fleetScreen) {
       const choreographyMedia = gsap.matchMedia();
       choreographyMedia.add('(min-width: 651px)', () => {
+        const choreographyScreens = [mainScreen, stockScreen, reportsScreen, fleetScreen];
+        const setChoreographyRendering = active => choreographyScreens.forEach(screen => screen.classList.toggle('is-transforming', active));
         const centerX = element => choreography.clientWidth / 2 - (element.offsetLeft + element.offsetWidth / 2);
         const centerY = element => choreography.clientHeight / 2 - (element.offsetTop + element.offsetHeight / 2);
         const heroScale = () => Math.min(
@@ -448,12 +466,12 @@
           choreography.clientHeight * .92 / mainScreen.offsetHeight
         );
 
-        gsap.set([mainScreen, stockScreen, reportsScreen, fleetScreen], {
+        gsap.set(choreographyScreens, {
           opacity: 1,
           x: 0,
           y: 0,
           scale: 1,
-          force3D: true
+          force3D: 'auto'
         });
 
         const timeline = gsap.timeline({
@@ -462,7 +480,11 @@
             start: () => `top top+=${(document.querySelector('.site-header')?.offsetHeight || 78) + 18}`,
             end: 'bottom bottom',
             scrub: 1,
-            invalidateOnRefresh: true
+            invalidateOnRefresh: true,
+            onUpdate: () => setChoreographyRendering(true),
+            onScrubComplete: () => setChoreographyRendering(false),
+            onLeave: () => setChoreographyRendering(false),
+            onLeaveBack: () => setChoreographyRendering(false)
           }
         });
 
@@ -501,6 +523,7 @@
           }, 1.2);
 
         return () => {
+          setChoreographyRendering(false);
           timeline.scrollTrigger?.kill();
           timeline.kill();
         };
