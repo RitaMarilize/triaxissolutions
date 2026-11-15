@@ -4,6 +4,8 @@
   const menuToggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#main-navigation');
   const navLinks = [...document.querySelectorAll('.main-nav a')];
+  const scrollProgress = document.querySelector('.scroll-progress');
+  const scrollProgressBar = scrollProgress?.querySelector('span');
   let syncSolutionMotion = null;
 
   const closeMenu = () => {
@@ -23,9 +25,22 @@
   navLinks.forEach(link => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
 
-  const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 12);
-  updateHeader();
-  window.addEventListener('scroll', updateHeader, { passive: true });
+  let pageStateFrame = null;
+  const updatePageState = () => {
+    pageStateFrame = null;
+    header?.classList.toggle('scrolled', window.scrollY > 12);
+    const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, window.scrollY / scrollable));
+    if (scrollProgressBar) scrollProgressBar.style.transform = `scaleX(${progress})`;
+    scrollProgress?.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+  };
+  const schedulePageState = () => {
+    if (pageStateFrame !== null) return;
+    pageStateFrame = window.requestAnimationFrame(updatePageState);
+  };
+  updatePageState();
+  window.addEventListener('scroll', schedulePageState, { passive: true });
+  window.addEventListener('resize', schedulePageState, { passive: true });
 
   const sections = [...document.querySelectorAll('main section[id]')];
   if ('IntersectionObserver' in window) {
@@ -182,6 +197,29 @@
     }
 
     gsap.registerPlugin(ScrollTrigger);
+
+    const backdropLogo = document.querySelector('.site-backdrop-logo');
+    const backdropBand = document.querySelector('.site-backdrop-band');
+    const backdropDots = [...document.querySelectorAll('.site-backdrop-dots')];
+    if (backdropLogo && backdropBand) {
+      gsap.to(backdropLogo, {
+        yPercent: -8,
+        rotation: 2,
+        ease: 'none',
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 1, invalidateOnRefresh: true }
+      });
+      gsap.to(backdropBand, {
+        xPercent: 5,
+        rotation: 17,
+        ease: 'none',
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 1, invalidateOnRefresh: true }
+      });
+      backdropDots.forEach((dot, index) => gsap.to(dot, {
+        y: index ? -54 : 54,
+        ease: 'none',
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 1.2, invalidateOnRefresh: true }
+      }));
+    }
 
     const mainTitleSelector = [
       '#hero-title',
