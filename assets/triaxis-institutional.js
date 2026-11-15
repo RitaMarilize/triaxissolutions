@@ -286,8 +286,78 @@
     });
 
     const hero = document.querySelector('.hero');
-    const heroTitleDistance = () => `+=${window.innerWidth <= 650 ? 300 : 360}`;
-    const heroPreviewDistance = () => `+=${window.innerWidth <= 650 ? 350 : 420}`;
+    if (hero) {
+      const heroTitleLines = [...hero.querySelectorAll('.hero-title-line > span')];
+      const heroEyebrow = hero.querySelector('.eyebrow');
+      const heroCopy = hero.querySelector('.hero-copy');
+      const heroActions = hero.querySelector('.hero-actions');
+      const heroAccent = hero.querySelector('.hero-copy-accent');
+      const heroLaptop = hero.querySelector('.hero-project-laptop');
+      const heroPhone = hero.querySelector('.hero-project-phone');
+      const heroCards = [...hero.querySelectorAll('.hero-feature-card')];
+      const heroDecor = [...hero.querySelectorAll('.dashboard-backdrop,.hero-visual-glow,.hero-visual-orbit')];
+      const heroIntro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      heroIntro
+        .from(heroEyebrow, { opacity: 0, y: 18, duration: .62 }, 0)
+        .from(heroTitleLines, { yPercent: 118, duration: .9, stagger: .1, force3D: true }, .08)
+        .from(heroCopy, { opacity: 0, y: 24, duration: .72 }, .28)
+        .from(heroActions, { opacity: 0, y: 20, duration: .68 }, .38)
+        .from(heroAccent, { opacity: 0, scaleX: .35, transformOrigin: 'left center', duration: .6 }, .5)
+        .from(heroLaptop, { opacity: 0, y: 46, scale: .975, duration: .95, force3D: true }, .16)
+        .from(heroPhone, { opacity: 0, x: 20, y: 34, duration: .82, force3D: true }, .36)
+        .from(heroCards, { opacity: 0, x: -18, y: 12, duration: .68, stagger: .1, force3D: true }, .42)
+        .from(heroDecor, { opacity: 0, scale: .96, duration: .85, stagger: .07 }, .24);
+
+      const heroCopyColumn = hero.querySelector('.hero-copy-column');
+      const heroVisualScroll = hero.querySelector('[data-hero-scroll]');
+      const atmosphereLines = [...hero.querySelectorAll('.hero-atmosphere-line')];
+      if (heroCopyColumn && heroVisualScroll) {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: hero,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: .85,
+            invalidateOnRefresh: true
+          }
+        })
+          .to(heroCopyColumn, { y: () => window.innerWidth <= 650 ? -14 : -34, ease: 'none' }, 0)
+          .to(heroCopy, { y: () => window.innerWidth <= 650 ? -4 : -12, ease: 'none' }, 0)
+          .to(heroActions, { y: () => window.innerWidth <= 650 ? -2 : -7, ease: 'none' }, 0)
+          .to(heroVisualScroll, { y: () => window.innerWidth <= 650 ? -8 : -18, scale: () => window.innerWidth <= 650 ? 1.01 : 1.025, ease: 'none', force3D: true }, 0)
+          .to(atmosphereLines, { xPercent: index => index ? -5 : 6, y: index => index ? -16 : 20, ease: 'none' }, 0);
+      }
+
+      const heroCursor = hero.querySelector('[data-hero-cursor]');
+      const heroPreview = hero.querySelector('.hero-login-preview');
+      if (heroCursor && heroPreview) {
+        const heroPointerMedia = gsap.matchMedia();
+        heroPointerMedia.add('(min-width: 1001px) and (hover: hover) and (pointer: fine)', () => {
+          const rotateX = gsap.quickTo(heroCursor, 'rotationX', { duration: .55, ease: 'power3.out' });
+          const rotateY = gsap.quickTo(heroCursor, 'rotationY', { duration: .55, ease: 'power3.out' });
+          const moveX = gsap.quickTo(heroCursor, 'x', { duration: .55, ease: 'power3.out' });
+          const moveY = gsap.quickTo(heroCursor, 'y', { duration: .55, ease: 'power3.out' });
+          const onPointerMove = event => {
+            const bounds = heroPreview.getBoundingClientRect();
+            const normalizedX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - .5) * 2));
+            const normalizedY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - .5) * 2));
+            rotateX(-normalizedY * 2);
+            rotateY(normalizedX * 3);
+            moveX(normalizedX * 8);
+            moveY(normalizedY * 8);
+          };
+          const resetPointer = () => { rotateX(0); rotateY(0); moveX(0); moveY(0); };
+          heroPreview.addEventListener('pointermove', onPointerMove);
+          heroPreview.addEventListener('pointerleave', resetPointer);
+          return () => {
+            heroPreview.removeEventListener('pointermove', onPointerMove);
+            heroPreview.removeEventListener('pointerleave', resetPointer);
+            gsap.set(heroCursor, { clearProps: 'transform' });
+          };
+        });
+      }
+    }
     const splitTitleWords = title => {
       const textNodes = [];
       const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
@@ -318,16 +388,16 @@
     };
 
     document.querySelectorAll(mainTitleSelector).forEach(title => {
+      if (title.id === 'hero-title') return;
       const words = splitTitleWords(title);
       if (!words.length) return;
 
-      const isHeroTitle = title.id === 'hero-title';
       const isContactTitle = title.id === 'contact-title';
       if (isContactTitle) gsap.set(title, { perspective: 900 });
 
       gsap.set(words, {
-        opacity: isContactTitle ? .04 : isHeroTitle ? .14 : .15,
-        y: isContactTitle ? 70 : isHeroTitle ? 26 : 20,
+        opacity: isContactTitle ? .04 : .15,
+        y: isContactTitle ? 70 : 20,
         rotationX: isContactTitle ? -16 : 0,
         transformOrigin: '50% 100%',
         force3D: true,
@@ -336,10 +406,10 @@
 
       gsap.timeline({
         scrollTrigger: {
-          trigger: isHeroTitle ? hero : title,
-          start: isHeroTitle ? 'top top' : isContactTitle ? 'top 92%' : 'top 82%',
-          end: isHeroTitle ? heroTitleDistance : isContactTitle ? 'top 34%' : 'top 48%',
-          scrub: isHeroTitle ? .55 : true,
+          trigger: title,
+          start: isContactTitle ? 'top 92%' : 'top 82%',
+          end: isContactTitle ? 'top 34%' : 'top 48%',
+          scrub: true,
           invalidateOnRefresh: true
         }
       }).to(words, {
@@ -347,7 +417,7 @@
         y: 0,
         rotationX: 0,
         duration: 1,
-        stagger: isHeroTitle ? .16 : isContactTitle ? .34 : .48,
+        stagger: isContactTitle ? .34 : .48,
         ease: 'none'
       });
     });
@@ -419,34 +489,6 @@
         }
       });
       renderSolutionMotion();
-    }
-
-    const heroPreview = document.querySelector('.hero-login-preview');
-    if (heroPreview) {
-      gsap.fromTo(heroPreview, {
-        opacity: .52,
-        y: () => window.innerWidth <= 650 ? 46 : 82,
-        rotationX: () => window.innerWidth <= 650 ? 2.5 : 6,
-        rotationY: () => window.innerWidth <= 650 ? -2 : -5,
-        rotationZ: () => window.innerWidth <= 650 ? -.8 : -1.8,
-        transformOrigin: '50% 60%',
-        force3D: true,
-        willChange: 'transform, opacity'
-      }, {
-        opacity: 1,
-        y: () => window.innerWidth <= 650 ? 0 : -22,
-        rotationX: 0,
-        rotationY: 0,
-        rotationZ: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: hero,
-          start: 'top top',
-          end: heroPreviewDistance,
-          scrub: .65,
-          invalidateOnRefresh: true
-        }
-      });
     }
 
     const choreography = document.querySelector('[data-scroll-choreography]');

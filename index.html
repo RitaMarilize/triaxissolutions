@@ -21,7 +21,7 @@
   <link rel="icon" type="image/png" href="assets/logo-triaxis.png?v=92">
   <link rel="preload" as="image" href="assets/logo-triaxis-solutions.png?v=92">
   <link rel="preload" as="image" href="assets/triaxis-entregas-login.png">
-  <link rel="stylesheet" href="assets/triaxis-institutional.css?v=114">
+  <link rel="stylesheet" href="assets/triaxis-institutional.css?v=116">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://triaxissolutions.com.br/#organization","name":"Triaxis Solutions","url":"https://triaxissolutions.com.br/","logo":"https://triaxissolutions.com.br/assets/logo-triaxis-solutions.png","description":"Sistemas sob medida, automação de processos e soluções em dados para empresas.","areaServed":"Região Metropolitana do Recife, Pernambuco"},{"@type":"WebSite","@id":"https://triaxissolutions.com.br/#website","url":"https://triaxissolutions.com.br/","name":"Triaxis Solutions","publisher":{"@id":"https://triaxissolutions.com.br/#organization"},"inLanguage":"pt-BR"}]}</script>
 </head>
 <body>
@@ -48,18 +48,27 @@
 
   <main id="conteudo">
     <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-atmosphere" aria-hidden="true"><span class="hero-atmosphere-glow"></span><span class="hero-atmosphere-line hero-atmosphere-line-one"></span><span class="hero-atmosphere-line hero-atmosphere-line-two"></span><span class="hero-atmosphere-grid"></span></div>
       <div class="shell hero-inner">
         <div class="hero-copy-column">
           <p class="eyebrow reveal">Sistemas • Automação • Dados</p>
-          <h1 id="hero-title" class="reveal">Sua operação pode<br> ser mais simples.<br> <span>Sua gestão,<br> mais inteligente.</span></h1>
+          <h1 id="hero-title" class="hero-title reveal"><span class="hero-title-line"><span>Sua operação pode</span></span><span class="hero-title-line"><span>ser mais simples.</span></span><span class="hero-title-line hero-title-emphasis"><span>Sua gestão,</span></span><span class="hero-title-line hero-title-emphasis"><span>mais inteligente.</span></span></h1>
           <p class="hero-copy reveal">Desenvolvemos sistemas, automações e soluções em dados para transformar a rotina das empresas.</p>
-          <div class="hero-actions reveal"><a class="button button-primary" href="#contato">Solicitar uma solução</a><a class="button button-secondary" href="#projetos">Conhecer projetos</a></div>
+          <div class="hero-actions reveal"><a class="button button-primary" href="#contato">Solicitar uma solução <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="#projetos">Conhecer projetos <span aria-hidden="true">↓</span></a></div>
+          <span class="hero-copy-accent" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
         <div class="hero-dashboard-wrap hero-login-preview reveal" aria-label="Tela real de acesso do sistema Triaxis Entregas apresentada em notebook e telefone">
-          <div class="dashboard-backdrop dashboard-backdrop-one" aria-hidden="true"></div>
-          <div class="dashboard-backdrop dashboard-backdrop-two" aria-hidden="true"></div>
-          <span class="hero-project-laptop" aria-hidden="true"><span class="hero-project-laptop-screen"><img src="assets/triaxis-entregas-login.png" alt="" decoding="async"></span><span class="hero-project-laptop-base"></span></span>
-          <span class="hero-project-phone" aria-hidden="true"><span class="hero-project-phone-speaker"></span><span class="hero-project-phone-screen"><span class="hero-mobile-app"><span class="hero-mobile-app-brand"><img src="assets/logo-triaxis.png?v=92" alt=""><b>TRIAXIS</b></span><span class="hero-mobile-app-card"><small>ENTRE NA TRIAXIS</small><strong>Entre na sua conta</strong><span class="hero-mobile-app-copy">Acesse o sistema para acompanhar sua operação.</span><span class="hero-mobile-app-label">E-mail</span><i class="hero-mobile-app-field"></i><span class="hero-mobile-app-label">Senha</span><i class="hero-mobile-app-field"></i><span class="hero-mobile-app-help">Esqueci minha senha</span><span class="hero-mobile-app-button">ACESSAR SISTEMA</span></span></span></span></span>
+          <div class="hero-visual-scroll" data-hero-scroll>
+            <div class="hero-feature-cards" aria-label="Diferenciais das soluções Triaxis">
+              <article class="hero-feature-card"><span class="hero-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/></svg></span><strong>Gestão<br>integrada</strong></article>
+              <article class="hero-feature-card"><span class="hero-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/></svg></span><strong>Automação<br>de processos</strong></article>
+              <article class="hero-feature-card"><span class="hero-feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 4-8 4-8-4 8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg></span><strong>Dados<br>estratégicos</strong></article>
+            </div>
+            <div class="hero-visual-cursor" data-hero-cursor>
+              <span class="hero-visual-glow" aria-hidden="true"></span><span class="hero-visual-orbit" aria-hidden="true"></span><span class="dashboard-backdrop dashboard-backdrop-one" aria-hidden="true"></span><span class="dashboard-backdrop dashboard-backdrop-two" aria-hidden="true"></span>
+              <div class="hero-device-stage" aria-hidden="true"><span class="hero-project-laptop"><span class="hero-project-laptop-screen"><img src="assets/triaxis-entregas-login.png" alt="" decoding="async" fetchpriority="high"></span><span class="hero-project-laptop-base"></span></span><span class="hero-project-phone"><span class="hero-project-phone-speaker"></span><span class="hero-project-phone-screen"><img src="assets/triaxis-entregas-login.png" alt="" decoding="async"></span></span><span class="hero-device-shadow"></span></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -164,6 +173,6 @@
 
   <script src="assets/gsap.min.js?v=3.13.0" defer></script>
   <script src="assets/ScrollTrigger.min.js?v=3.13.0" defer></script>
-  <script src="assets/triaxis-institutional.js?v=137" defer></script>
+  <script src="assets/triaxis-institutional.js?v=139" defer></script>
 </body>
 </html>
